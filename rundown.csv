@@ -36,37 +36,31 @@ A,13:45,13:55,Persiapan,IRIS,Penyisihan
 A,13:55,14:00,Race 2,IRIS,Penyisihan
 A,14:00,14:10,Persiapan,IRIS,Penyisihan
 A,14:10,14:15,Race 3,IRIS,Penyisihan
+A,14:15,14:25,Persiapan,Erucokro Team,Penyisihan
+A,14:25,14:30,Race 1,Erucokro Team,Penyisihan
 A,14:30,14:40,Persiapan,Erucokro Team,Penyisihan
-A,14:40,14:45,Race 1,Erucokro Team,Penyisihan
-A,14:45,14:55,Persiapan,Abhinaya,Penyisihan
-A,14:55,15:00,Race 1,Abhinaya,Penyisihan
-A,15:00,15:10,Persiapan,Krakatau Taurus,Penyisihan
-A,15:10,15:15,Race 2,Krakatau Taurus,Penyisihan
-A,15:15,15:25,Persiapan,Erucokro Team,Penyisihan
-A,15:25,15:30,Race 3,Erucokro Team,Penyisihan
+A,14:40,14:45,Race 2,Erucokro Team,Penyisihan
+A,14:45,14:55,Persiapan,Erucokro Team,Penyisihan
+A,14:55,15:00,Race 3,Erucokro Team,Penyisihan
+A,15:00,15:10,Persiapan,Abhinaya,Penyisihan
+A,15:10,15:15,Race 1,Abhinaya,Penyisihan
+A,15:15,15:25,Persiapan,Abhinaya,Penyisihan
+A,15:25,15:30,Race 2,Abhinaya,Penyisihan
 A,15:30,15:40,Persiapan,Abhinaya,Penyisihan
 A,15:40,15:45,Race 3,Abhinaya,Penyisihan
 A,15:45,16:00,ISHOMA 2,,Penyisihan
 A,16:00,16:10,Persiapan,TIM FINAL 1,Final
 A,16:10,16:15,Race 1,TIM FINAL 1,Final
-A,16:15,16:25,Persiapan,TIM FINAL 3,Final
-A,16:25,16:30,Race 1,TIM FINAL 3,Final
-A,16:30,16:40,Persiapan,TIM FINAL 2,Final
-A,16:40,16:45,Race 2,TIM FINAL 2,Final
-A,16:45,16:55,Persiapan,TIM FINAL 1,Final
-A,16:55,17:00,Race 3,TIM FINAL 1,Final
+A,16:15,16:25,Persiapan,TIM FINAL 1,Final
+A,16:25,16:30,Race 2,TIM FINAL 1,Final
+A,16:30,16:40,Persiapan,TIM FINAL 1,Final
+A,16:40,16:45,Race 3,TIM FINAL 1,Final
+A,16:45,16:55,Persiapan,TIM FINAL 3,Final
+A,16:55,17:00,Race 1,TIM FINAL 3,Final
 A,17:00,17:10,Persiapan,TIM FINAL 3,Final
-A,17:10,17:15,Race 3,TIM FINAL 3,Final
-A,17:20,17:30,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
-A,17:30,17:35,Race 1,TIM FINAL 1 CHALLENGE,Final Challenge
-A,17:35,17:45,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
-A,17:45,17:50,Race 1,TIM FINAL 3 CHALLENGE,Final Challenge
-A,17:50,18:00,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
-A,18:00,18:05,Race 2,TIM FINAL 2 CHALLENGE,Final Challenge
-A,18:05,18:15,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
-A,18:15,18:20,Race 3,TIM FINAL 1 CHALLENGE,Final Challenge
-A,18:20,18:30,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
-A,18:30,18:35,Race 3,TIM FINAL 3 CHALLENGE,Final Challenge
+A,17:10,17:15,Race 2,TIM FINAL 3,Final
+A,17:15,17:25,Persiapan,TIM FINAL 3,Final
+A,17:25,17:30,Race 3,TIM FINAL 3,Final
 B,09:05,09:15,Persiapan,Arc 2,Penyisihan
 B,09:15,09:20,Race 1,Arc 2,Penyisihan
 B,09:20,09:30,Persiapan,Arc 2,Penyisihan
@@ -104,28 +98,34 @@ B,13:50,14:00,Persiapan,Mizuro Um,Penyisihan
 B,14:00,14:05,Race 2,Mizuro Um,Penyisihan
 B,14:05,14:15,Persiapan,Mizuro Um,Penyisihan
 B,14:15,14:20,Race 3,Mizuro Um,Penyisihan
+B,14:20,14:30,Persiapan,Krakatau Taurus,Penyisihan
+B,14:30,14:35,Race 1,Krakatau Taurus,Penyisihan
 B,14:35,14:45,Persiapan,Krakatau Taurus,Penyisihan
-B,14:45,14:50,Race 1,Krakatau Taurus,Penyisihan
-B,14:50,15:00,Persiapan,Erucokro Team,Penyisihan
-B,15:00,15:05,Race 2,Erucokro Team,Penyisihan
-B,15:05,15:15,Persiapan,Abhinaya,Penyisihan
-B,15:15,15:20,Race 2,Abhinaya,Penyisihan
-B,15:20,15:30,Persiapan,Krakatau Taurus,Penyisihan
-B,15:30,15:35,Race 3,Krakatau Taurus,Penyisihan
+B,14:45,14:50,Race 2,Krakatau Taurus,Penyisihan
+B,14:50,15:00,Persiapan,Krakatau Taurus,Penyisihan
+B,15:00,15:05,Race 3,Krakatau Taurus,Penyisihan
 B,15:45,16:00,ISHOMA 2,,Penyisihan
 B,16:05,16:15,Persiapan,TIM FINAL 2,Final
 B,16:15,16:20,Race 1,TIM FINAL 2,Final
-B,16:20,16:30,Persiapan,TIM FINAL 1,Final
-B,16:30,16:35,Race 2,TIM FINAL 1,Final
-B,16:35,16:45,Persiapan,TIM FINAL 3,Final
-B,16:45,16:50,Race 2,TIM FINAL 3,Final
-B,16:50,17:00,Persiapan,TIM FINAL 2,Final
-B,17:00,17:05,Race 3,TIM FINAL 2,Final
-B,17:25,17:35,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
-B,17:35,17:40,Race 1,TIM FINAL 2 CHALLENGE,Final Challenge
-B,17:40,17:50,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
-B,17:50,17:55,Race 2,TIM FINAL 1 CHALLENGE,Final Challenge
-B,17:55,18:05,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
-B,18:05,18:10,Race 2,TIM FINAL 3 CHALLENGE,Final Challenge
-B,18:10,18:20,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
-B,18:20,18:25,Race 3,TIM FINAL 2 CHALLENGE,Final Challenge
+B,16:20,16:30,Persiapan,TIM FINAL 2,Final
+B,16:30,16:35,Race 2,TIM FINAL 2,Final
+B,16:35,16:45,Persiapan,TIM FINAL 2,Final
+B,16:45,16:50,Race 3,TIM FINAL 2,Final
+B,16:50,17:00,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:00,17:05,Race 1,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:05,17:15,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:15,17:20,Race 2,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:20,17:30,Persiapan,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:30,17:35,Race 3,TIM FINAL 1 CHALLENGE,Final Challenge
+B,17:35,17:45,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
+B,17:45,17:50,Race 1,TIM FINAL 2 CHALLENGE,Final Challenge
+B,17:50,18:00,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
+B,18:00,18:05,Race 2,TIM FINAL 2 CHALLENGE,Final Challenge
+B,18:05,18:15,Persiapan,TIM FINAL 2 CHALLENGE,Final Challenge
+B,18:15,18:20,Race 3,TIM FINAL 2 CHALLENGE,Final Challenge
+B,18:20,18:30,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
+B,18:30,18:35,Race 1,TIM FINAL 3 CHALLENGE,Final Challenge
+B,18:35,18:45,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
+B,18:45,18:50,Race 2,TIM FINAL 3 CHALLENGE,Final Challenge
+B,18:50,19:00,Persiapan,TIM FINAL 3 CHALLENGE,Final Challenge
+B,19:00,19:05,Race 3,TIM FINAL 3 CHALLENGE,Final Challenge

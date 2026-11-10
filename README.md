@@ -21,7 +21,15 @@ Semua perangkat harus di Wi-Fi/LAN yang sama. Kalau koneksi putus, layar penonto
 - **`config.json`**: judul, PIN operator, port, `swapSeconds`, nama lapangan, dan nama finalis (`"TIM FINAL 1": "IRIS"`). Nama finalis juga bisa diisi langsung dari halaman operator.
 - `state.json`: dibuat otomatis (tunda, jeda, pengumuman, nama). Hapus untuk mulai bersih.
 
-Rundown asli dari Excel (`Rundown MAV.xlsx`, sheet `MAV`) sudah dikonversi oleh `tools/xlsx2csv.py`, sekaligus mengoreksi bug di Excel (jam salah ketik 02:35 → 14:35, rumus Start Lapangan B, ISHOMA 1 jadi 11:30–12:00).
+### Dapat rundown Excel baru?
+
+```bash
+node tools/xlsx2csv.js "~/Downloads/Rundown MAV (1).xlsx"
+```
+
+Perintah ini membaca sheet `MAV`, menulis `rundown.csv`, dan menyimpan versi lama ke `rundown.bak.csv`. Kalau server sedang jalan, semua layar ikut berganti dalam ±1 detik; tidak perlu restart. Bug di Excel dikoreksi otomatis: jam salah ketik 02:35 → 14:35, rumus Start Lapangan B `=B{baris}`, dan ISHOMA 1 dikunci 11:30–12:00. Setelah itu buka halaman operator: kotak kuning **"Periksa rundown"** muncul kalau ada tim yang bentrok di dua lapangan.
+
+Mau batal? `cp rundown.bak.csv rundown.csv`.
 
 ## Checklist hari-H (koneksi)
 

@@ -47,11 +47,11 @@ test('check: tim di dua lapangan sekaligus terdeteksi', () => {
   assert.equal(w.length, 1); assert.match(w[0], /^X: .*bentrok/);
 });
 
-test('rundown.csv asli: sesuai versi yang sudah diverifikasi', () => {
+test('rundown.csv: aturan lomba terpenuhi', () => {
   const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, 'config.json'), 'utf8'));
   const L = build(parseCSV(fs.readFileSync(path.join(__dirname, cfg.rundownFile), 'utf8')), cfg);
   const [A, B] = L;
-  assert.equal(H(A.items.at(-1).e), '18:37:00'); assert.equal(H(B.items.at(-1).e), '18:26:30');
+  assert.ok(A.items.at(-1).e < 20 * 3600 && B.items.at(-1).e < 20 * 3600, 'lomba selesai sebelum 20:00');
   for (const l of L) {
     const ish = l.items.filter(i => i.type === 'rest');
     assert.deepEqual(ish.map(i => i.label), ['ISHOMA 1', 'ISHOMA 2']);
@@ -63,6 +63,14 @@ test('rundown.csv asli: sesuai versi yang sudah diverifikasi', () => {
   L.forEach(l => l.items.filter(i => i.type === 'race').forEach(i => races.set(i.team, (races.get(i.team) || 0) + 1)));
   assert.equal(races.size, 21, '15 tim penyisihan + 3 final + 3 challenge');
   races.forEach((n, t) => assert.equal(n, 3, t + ' harus race 3 kali'));
+});
+
+test('xlsx2csv: rumus bersama Excel digeser dengan benar', () => {
+  const src = fs.readFileSync(path.join(__dirname, 'tools/xlsx2csv.js'), 'utf8');
+  const ctx = { require, module: {}, process: { argv: [] }, __dirname: path.join(__dirname, 'tools') }; vm.createContext(ctx);
+  vm.runInContext(src.replace(/^#!.*\n/, '') + ';this.shift=shift;', ctx);
+  assert.equal(ctx.shift('B7', 1, 0), 'B8'); assert.equal(ctx.shift('H6', 3, 0), 'H9');
+  assert.equal(ctx.shift('$B$7+C7', 2, 1), '$B$7+D9');
 });
 
 // ---------- logika layar (common.js) dijalankan tanpa browser ----------
