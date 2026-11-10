@@ -53,7 +53,15 @@ Timer berjalan sendiri mengikuti rundown. **Dalam kondisi normal Operator tidak 
 1. **Pergantian tim (30 detik):** layar menampilkan *"Masuk: [nama tim]"*. Koordinator memanggil tim berikutnya.
 2. **Persiapan (10 menit):** bunyi *ding-ding* saat sisa 1 menit, lalu **tik ×5** di 5 detik terakhir.
 3. **Race (5 menit):** bunyi **GO** saat mulai; **tik ×5** di 5 detik terakhir; **buzzer** saat selesai.
-4. Ulangi untuk Race 2 dan Race 3.
+4. **Stopwatch lap** (Operator, di kartu lapangan yang sama):
+   - Robot mulai jalan → **Start**.
+   - Robot melewati garis lap → tekan tombol **1** di keyboard (Lapangan A) atau **2** (Lapangan B), atau klik **Lap**. Keyboard lebih presisi daripada mouse.
+   - Salah tekan → **Batal lap**.
+   - Robot finis / race selesai → **Stop**.
+   - Sebelum tim berikutnya → **Reset & simpan**. Hasil (tim, kegiatan, jumlah lap, waktu per lap) masuk ke tabel **Hasil stopwatch**.
+
+   Penonton melihat **Waktu race** dan jumlah lap di panel lapangan.
+5. Ulangi untuk Race 2 dan Race 3.
 
 Operator memantau dua hal: **pesan dari koordinator** dan **kotak "Mundur X mnt"** di kartu lapangan (artinya jadwal lapangan itu sedang tergeser).
 
@@ -73,6 +81,8 @@ Semua tombol ada di kartu lapangan yang bersangkutan (A atau B).
 | **Timer salah sedikit** (beberapa detik) | **−10 dtk / +10 dtk**. |
 | **Kedua lapangan terhenti** (mis. pengumuman panitia) | Bagian **Kedua lapangan** → **Jeda semua**, lalu **Lanjut semua**. |
 | **Perlu menyampaikan info ke penonton** | Isi **Pengumuman** → **Tampilkan**. Setelah tidak relevan: **Hapus**. |
+| **Lupa menekan Start stopwatch** | Tekan **Start** secepatnya dan beri tahu juri selisihnya; stopwatch tidak bisa dimundurkan. |
+| **Hasil stopwatch salah / dobel** | Tabel **Hasil stopwatch** → **Hapus** pada baris itu. |
 | **Salah tekan** | Koreksi dengan tombol geser (−/+). Jangan tekan **Reset** saat lomba berjalan kecuali yakin; Reset mengembalikan lapangan ke jam Excel. |
 
 Setiap tombol penting meminta konfirmasi. Baca nama lapangan dan tim di kotak konfirmasi sebelum klik OK.
@@ -142,9 +152,10 @@ Setiap tim: Persiapan 10 menit → Race 5 menit, sebanyak 3 kali. Semua Final Ch
 
 ## H. Selesai lomba
 
-1. Hapus pengumuman (atau tampilkan *"Terima kasih"*).
-2. Tutup jendela hitam server (atau tekan **Ctrl + C**).
-3. Untuk dipakai lagi dari awal (lomba/gladi berikutnya): hapus `state.json` sebelum menjalankan `MULAI.bat`.
+1. Halaman operator → **Hasil stopwatch** → **Unduh CSV (Excel)**, serahkan ke juri/sekretariat.
+2. Hapus pengumuman (atau tampilkan *"Terima kasih"*).
+3. Tutup jendela hitam server (atau tekan **Ctrl + C**).
+4. Untuk dipakai lagi dari awal (lomba/gladi berikutnya): hapus `state.json` sebelum menjalankan `MULAI.bat`.
 
 ---
 

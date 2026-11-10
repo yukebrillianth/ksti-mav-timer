@@ -69,6 +69,8 @@ Setiap lapangan punya tombolnya sendiri. Jadwal lapangan A dan B bisa digeser te
 | **Reset** | Kembali ke jadwal Excel | Tunda dan jeda dihapus |
 | **Kedua lapangan** | Sama seperti di atas, untuk A dan B sekaligus | |
 | **Rundown lengkap → Mulai** | Lompat ke kegiatan mana pun | Kegiatan itu dimulai sekarang; sesudahnya ikut bergeser |
+| **Stopwatch: Start / Lap / Stop / Batal lap / Reset & simpan** | Menghitung lap manual | Waktu race & jumlah lap tampil di layar penonton. **Tombol 1 = Lap A, 2 = Lap B** di keyboard. Reset & simpan memasukkan hasil ke tabel **Hasil stopwatch** |
+| **Hasil stopwatch → Unduh CSV** | Rekap untuk juri | File `hasil-stopwatch.csv` (langsung rapi di Excel): tim, kegiatan, jumlah lap, total, waktu tiap lap |
 | **Pengumuman** | Info untuk penonton | Banner berdenyut di atas layar penonton. Klik *Hapus* untuk menghilangkan |
 | **Nama tim** | Setelah penyisihan selesai | Isi nama finalis untuk `TIM FINAL 1`, dst. Tersimpan otomatis |
 | **Tampilan layar penonton** | Sesuaikan dengan ruangan | **Gelap** (cocok untuk proyektor) atau **Terang** (gaya its.ac.id) |
@@ -78,6 +80,13 @@ Pada rundown lengkap, jam atas = jadwal Excel dan jam bawah = perkiraan setelah 
 Semua pengaturan ini tersimpan di `state.json`. Kalau laptop restart, klik `MULAI.bat` lagi; tunda, pengumuman, dan nama finalis tetap ada.
 
 ---
+
+### Stopwatch lap
+
+- Waktu dicatat saat tombol ditekan di laptop operator (jam sudah disinkron ke server), jadi lag jaringan tidak menggeser hasil.
+- Tim dan kegiatan (mis. *Race 2*) diambil otomatis dari jadwal lapangan itu saat **Start** ditekan.
+- **Stop** lalu **Start** lagi = melanjutkan (waktu dijumlahkan), bukan mulai baru.
+- Hasil tersimpan di `state.json` dan tidak hilang walau server di-restart. Menghapus `state.json` juga menghapus hasil stopwatch, jadi **unduh CSV dulu**.
 
 ## 4. Update rundown dari Excel
 

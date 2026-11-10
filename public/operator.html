@@ -41,6 +41,7 @@
   .chips button[aria-pressed="true"] { background: var(--its-navy); color: #fff; border-color: var(--its-navy); }
   .names { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px 16px; }
   .names label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+  .dl { font-weight: 600; color: #0c64c2; background: var(--soft); padding: 8px 14px; border-radius: 4px; text-decoration: none; }
   .names input { font-size: 15px; font-weight: 400; color: var(--ink); }
   .rd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .rd-col { max-height: 520px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; }
@@ -118,6 +119,12 @@
   </section>
 
   <section class="card">
+    <div class="sec-row" style="margin-bottom:6px"><h2 class="g-head">Hasil stopwatch</h2><a class="dl" href="/api/hasil.csv" download>Unduh CSV (Excel)</a></div>
+    <p class="hint" style="margin-bottom:10px">Tersimpan setiap kali <b>Reset &amp; simpan</b> ditekan. Tim dan kegiatan diambil otomatis dari jadwal saat Start ditekan.</p>
+    <div id="results"></div>
+  </section>
+
+  <section class="card">
     <h2 class="g-head">Nama tim</h2>
     <p class="hint" style="margin-bottom:10px">Isi nama finalis setelah penyisihan selesai. Kosongkan untuk kembali ke nama di rundown. Tersimpan otomatis.</p>
     <div class="names" id="names"></div>
@@ -143,7 +150,7 @@ async function cmd(body) {
     const r = await fetch('/api/cmd', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, pin: PIN }) });
     if (r.status === 401) { authed = false; PIN = ''; try { localStorage.removeItem('mav-pin'); } catch { } gate(); throw new Error('PIN salah'); }
     if (!r.ok) throw new Error(await r.text());
-    if (body.op !== 'auth') toast('Terkirim ke semua layar');
+    if (body.op !== 'auth' && body.op !== 'sw') toast('Terkirim ke semua layar');
     return true;
   } catch (e) { toast('Gagal: ' + (e.message || e), 1); return false; }
 }
@@ -160,11 +167,24 @@ function build() {
     <div class="card ctl">
       <div class="btns"><span class="lab">Geser</span><button data-op="shift" data-l="${l.id}" data-v="-60">−1 mnt</button><button data-op="shift" data-l="${l.id}" data-v="-10">−10 dtk</button><button data-op="shift" data-l="${l.id}" data-v="10">+10 dtk</button><button data-op="shift" data-l="${l.id}" data-v="60">+1 mnt</button><button data-op="shift" data-l="${l.id}" data-v="300">+5 mnt</button></div>
       <div class="btns"><span class="lab">Kegiatan</span><button data-op="toggle" data-l="${l.id}" class="warn" id="tg-${l.id}">Jeda</button><button data-op="restart" data-l="${l.id}">Ulang dari awal</button><button data-op="next" data-l="${l.id}" class="pri">Mulai berikutnya sekarang</button><button data-op="reset" data-l="${l.id}">Reset</button></div>
+      <div class="btns"><span class="lab">Stopwatch</span><button data-sw="start" data-l="${l.id}" class="pri" id="sws-${l.id}">Start</button><button data-sw="lap" data-l="${l.id}" class="pri">Lap (${D.lanes.indexOf(l) + 1})</button><button data-sw="stop" data-l="${l.id}" class="warn">Stop</button><button data-sw="undo" data-l="${l.id}">Batal lap</button><button data-sw="reset" data-l="${l.id}">Reset &amp; simpan</button></div>
     </div></div>`).join('');
   built = true; gate();
 }
+// stopwatch: jam saat tombol ditekan ikut dikirim supaya lag jaringan tidak memengaruhi waktu lap
+function sw(lane, action) {
+  const l = D.lanes.find(x => x.id === lane), { T } = clockTimes(), s = laneState(l, T[lane]), it = s.cur && s.cur.type !== 'rest' ? s.cur : s.queue[0];
+  if (action === 'reset' && swActive(swOf(lane)) && !confirm(`Simpan hasil stopwatch ${l.name} (${swOf(lane).laps.length} lap) lalu reset?`)) return;
+  return cmd({ op: 'sw', lane, action, at: Date.now() + OFF, team: it?.team ? name(it.team) : '', label: it?.label || '' });
+}
+document.addEventListener('keydown', e => { // 1 = Lap Lapangan A, 2 = Lap Lapangan B (kalau tidak sedang mengetik)
+  if (e.repeat || /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName) || !authed || SIM) return;
+  const l = D?.lanes[+e.key - 1]; if (l) { e.preventDefault(); sw(l.id, 'lap'); }
+});
 const lanesOf = b => b.dataset.l === '*' ? D.lanes.map(l => l.id) : [b.dataset.l];
 document.addEventListener('click', async e => {
+  const sb = e.target.closest('button[data-sw]'); if (sb) { if (!sb.disabled) sw(sb.dataset.l, sb.dataset.sw); return; }
+  const dr = e.target.closest('button[data-delres]'); if (dr) { if (confirm('Hapus hasil stopwatch ini?')) cmd({ op: 'delResult', i: +dr.dataset.delres }); return; }
   const f = e.target.closest('[data-f]'); if (f) { filter = f.dataset.f; render(); return; }
   const b = e.target.closest('button[data-op]'); if (!b || b.disabled) return;
   const lanes = lanesOf(b), op = b.dataset.op, { T } = clockTimes(), l = D.lanes.find(x => x.id === lanes[0]);
@@ -212,6 +232,12 @@ function render() {
     set($('lane-' + l.id), renderLane(l, W, T, 4));
     const tg = $('tg-' + l.id); if (tg) tg.textContent = isPaused(l.id) ? 'Lanjutkan' : 'Jeda';
   });
+  D.lanes.forEach(l => { const w = swOf(l.id), r = w?.run;
+    const b = $('sws-' + l.id); if (b) b.textContent = r ? 'Berjalan…' : w?.acc ? 'Lanjutkan' : 'Start'; });
+  set($('results'), D.state.results?.length ? `<div class="rd-col" style="max-height:360px"><table><thead><tr><th>Disimpan</th><th>Lap.</th><th>Tim</th><th>Kegiatan</th><th>Lap</th><th>Total</th><th>Waktu per lap</th><th></th></tr></thead><tbody>` +
+    D.state.results.map((r, i) => `<tr><td class="tm">${esc(r.at)}</td><td>${esc(r.lane)}</td><td>${esc(r.team)}</td><td>${esc(r.label)}</td><td class="tm"><b>${r.laps.length}</b></td><td class="tm">${fmtMs(r.total)}</td>
+      <td class="tm" style="white-space:normal">${r.laps.map((x, k) => `${k + 1}: ${fmtMs(x - (r.laps[k - 1] || 0))}`).join(' · ')}</td><td><button data-delres="${i}" ${authed && !SIM ? '' : 'disabled'}>Hapus</button></td></tr>`).reverse().join('') +
+    '</tbody></table></div>' : '<p class="empty">Belum ada hasil.</p>');
   // tim + filter
   const ks = TEAM_LIST.map(c => [c, teamState(c, T).k]);
   const cnt = { all: ks.length, live: ks.filter(x => x[1] === 'live').length, done: ks.filter(x => x[1] === 'done').length }; cnt.wait = cnt.all - cnt.live - cnt.done;
@@ -230,7 +256,7 @@ function render() {
 }
 
 connect(onData);
-setInterval(render, 250);
+setInterval(render, 100);
 if (PIN && !SIM) cmd({ op: 'auth' }).then(ok => { authed = ok; gate(); }); else gate();
 $('dlink').textContent = location.origin + '/';
 </script>

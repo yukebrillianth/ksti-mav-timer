@@ -84,7 +84,7 @@ function render() {
   const { W, T } = clockTimes();
   renderCommon(W, T);
   const h = D.lanes.map(l => renderLane(l, W, T, 2)).join('');
-  if ($('lanes').__h !== h) { set($('lanes'), h); fit(); }
+  if ($('lanes').__h !== h) { set($('lanes'), h); const shape = h.replace(/\d/g, ''); if (shape !== fit.shape) { fit.shape = shape; fit(); } } // ukur ulang hanya bila bentuk isi berubah, bukan tiap angka berganti
   set($('teams'), TEAM_LIST.map(c => renderTeam(c, T, W)).join(''));
   Sound.update(D.lanes, T);
 }
@@ -95,7 +95,7 @@ function fit() {
   b.classList.remove('compact'); shrink(.72);       // 1) timer boleh mengecil sedikit
   if (over()) { b.classList.add('compact'); shrink(.45); } // 2) masih sempit: tabel tim dipadatkan dulu, baru timer
 }
-addEventListener('resize', fit);
+addEventListener('resize', () => { fit.shape = null; fit(); });
 connect(render);
 setInterval(render, 100); // 10x per detik: pergantian detik & suara telat maks 0,1 dtk
 // suara: browser butuh satu klik dulu. Pilihan nyala/mati diingat; bila 'nyala', klik apa pun (mis. dobel-klik layar penuh) langsung mengaktifkan.

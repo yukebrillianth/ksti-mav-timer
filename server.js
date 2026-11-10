@@ -10,7 +10,7 @@ const wibNow = () => state.sim ? Math.floor(state.sim.base + (Date.now() - state
   : Math.floor(Date.now() / 1000 + WIB) % 86400;
 
 let cfg, lanes, loadError = null, warnings = [];
-let state = { delay: {}, pausedAt: {}, names: {}, message: '', sim: null, simSaved: null };
+let state = { delay: {}, pausedAt: {}, names: {}, message: '', sim: null, simSaved: null, sw: {}, results: [] };
 
 // ---------- rundown ----------
 function toSec(v) { // "9:00", "09.00", "09:00:30"
@@ -110,6 +110,23 @@ function apply(cmd) {
     case 'simStop':
       if (state.sim) { Object.assign(state.delay, state.simSaved?.delay); Object.assign(state.pausedAt, state.simSaved?.pausedAt); }
       state.sim = null; state.simSaved = null; break;
+    case 'sw': { // stopwatch lap manual per lapangan (dikendalikan operator)
+      const id = String(cmd.lane); if (!ids.includes(id)) throw 'lapangan tidak dikenal';
+      const nowMs = Date.now(), at = Math.abs(+cmd.at - nowMs) < 5000 ? +cmd.at : nowMs; // jam saat tombol ditekan (sudah disinkron), bukan saat paket tiba
+      const blank = () => ({ run: false, t0: null, acc: 0, laps: [], team: '', label: '' });
+      const w = state.sw[id] ??= blank(), total = () => w.acc + (w.run ? at - w.t0 : 0);
+      switch (cmd.action) {
+        case 'start': if (!w.run) { if (!w.acc && !w.laps.length) { w.team = String(cmd.team || '').slice(0, 60); w.label = String(cmd.label || '').slice(0, 40); } w.run = true; w.t0 = at; } break;
+        case 'lap': if (w.run && w.laps.length < 500) w.laps.push(total()); break;
+        case 'undo': w.laps.pop(); break;
+        case 'stop': if (w.run) { w.acc = total(); w.run = false; w.t0 = null; } break;
+        case 'reset': // simpan hasil dulu, baru kosongkan
+          if (w.run || w.acc || w.laps.length) state.results.push({ lane: id, team: w.team, label: w.label, laps: w.laps, total: total(), at: hms(wibNow()) });
+          state.sw[id] = blank(); break;
+        default: throw 'aksi stopwatch tidak dikenal';
+      }
+      break; }
+    case 'delResult': { const i = Number(cmd.i); if (!(i >= 0 && i < state.results.length)) throw 'hasil tidak ada'; state.results.splice(i, 1); break; }
     case 'theme': if (!['gelap', 'terang'].includes(cmd.value)) throw 'tema tidak dikenal'; state.theme = cmd.value; break;
     default: throw 'perintah tidak dikenal';
   }
@@ -120,11 +137,24 @@ function apply(cmd) {
 // ---------- http ----------
 const TYPES = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.woff': 'font/woff', '.woff2': 'font/woff2', '.svg': 'image/svg+xml' };
 const ROUTES = { '/': 'display.html', '/operator': 'operator.html' };
+const fmtMs = ms => { const c = Math.floor(ms / 10), h = Math.floor(c / 360000), p = n => String(n).padStart(2, '0');
+  return (h ? h + ':' : '') + p(Math.floor(c / 6000) % 60) + ':' + p(Math.floor(c / 100) % 60) + '.' + p(c % 100); };
+function resultsCSV() { // pemisah ';' + BOM supaya langsung rapi di Excel Indonesia
+  const nm = c => state.names[c] || cfg.teams[c] || c, q = v => `"${String(v).replace(/"/g, '""')}"`;
+  const max = Math.max(0, ...state.results.map(r => r.laps.length));
+  const head = ['disimpan', 'lapangan', 'tim', 'kegiatan', 'jumlah_lap', 'total', ...Array.from({ length: max }, (_, i) => 'lap_' + (i + 1))];
+  const rows = state.results.map(r => [r.at, r.lane, nm(r.team), r.label, r.laps.length, fmtMs(r.total), ...r.laps.map((x, i) => fmtMs(x - (r.laps[i - 1] || 0)))]);
+  return '\uFEFF' + [head, ...rows].map(r => r.map(q).join(';')).join('\r\n') + '\r\n';
+}
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
   if (url.pathname === '/api/events') {
     res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
     clients.add(res); send(res, payload()); req.on('close', () => clients.delete(res)); return;
+  }
+  if (url.pathname === '/api/hasil.csv') {
+    res.writeHead(200, { 'Content-Type': 'text/csv; charset=utf-8', 'Content-Disposition': 'attachment; filename="hasil-stopwatch.csv"' });
+    return res.end(resultsCSV());
   }
   if (url.pathname === '/api/cmd' && req.method === 'POST') {
     let body = '';

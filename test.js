@@ -168,6 +168,30 @@ test('server: perintah operator, PIN, validasi, siaran SSE', async t => {
   assert.equal(s.sim, null); assert.equal(s.delay.B, savedB, 'tunda asli kembali setelah simulasi');
   assert.equal((await cmd({ op: 'theme', value: 'pink' })).status, 400);
   await cmd({ op: 'theme', value: 'terang' }); s = (await next()).state; assert.equal(s.theme, 'terang');
+  // stopwatch lap: waktu diambil dari jam tombol ditekan; hasil tersimpan saat reset
+  const t0 = Date.now() - 4000; // server hanya menerima jam tombol dalam ±5 dtk
+  assert.equal((await cmd({ op: 'sw', lane: 'Z', action: 'start' })).status, 400);
+  assert.equal((await cmd({ op: 'sw', lane: 'A', action: 'meledak' })).status, 400);
+  await cmd({ op: 'sw', lane: 'A', action: 'lap', at: t0 + 3000 }); s = (await next()).state; assert.equal(s.sw.A.laps.length, 0, 'lap sebelum start diabaikan');
+  await cmd({ op: 'sw', lane: 'A', action: 'start', at: t0, team: 'IRIS', label: 'Race 1' }); s = (await next()).state; assert.equal(s.sw.A.run, true);
+  await cmd({ op: 'sw', lane: 'A', action: 'lap', at: t0 + 1000 }); await next();
+  await cmd({ op: 'sw', lane: 'A', action: 'lap', at: t0 + 2500 }); await next();
+  await cmd({ op: 'sw', lane: 'A', action: 'lap', at: t0 + 3000 }); await next();
+  await cmd({ op: 'sw', lane: 'A', action: 'undo' }); s = (await next()).state; assert.deepEqual(s.sw.A.laps, [1000, 2500]);
+  await cmd({ op: 'sw', lane: 'A', action: 'stop', at: t0 + 3100 }); s = (await next()).state; assert.equal(s.sw.A.acc, 3100); assert.equal(s.sw.A.run, false);
+  await cmd({ op: 'sw', lane: 'A', action: 'lap', at: t0 + 3200 }); s = (await next()).state; assert.equal(s.sw.A.laps.length, 2, 'lap diabaikan saat berhenti');
+  await cmd({ op: 'sw', lane: 'A', action: 'start', at: t0 + 3500, team: 'LAIN' }); await next();
+  await cmd({ op: 'sw', lane: 'A', action: 'stop', at: t0 + 3600 }); s = (await next()).state; assert.equal(s.sw.A.acc, 3200, 'lanjut setelah stop menambah waktu'); assert.equal(s.sw.A.team, 'IRIS', 'tim tidak berganti saat dilanjutkan');
+  await cmd({ op: 'sw', lane: 'A', action: 'reset' }); s = (await next()).state;
+  assert.equal(s.results.length, 1); assert.deepEqual([s.results[0].team, s.results[0].label, s.results[0].laps.length, s.results[0].total], ['IRIS', 'Race 1', 2, 3200]);
+  assert.equal(s.sw.A.laps.length, 0);
+  await cmd({ op: 'sw', lane: 'B', action: 'reset' }); s = (await next()).state; assert.equal(s.results.length, 1, 'stopwatch kosong tidak disimpan');
+  const csvBuf = Buffer.from(await (await fetch(base + '/api/hasil.csv')).arrayBuffer()), csvTxt = csvBuf.toString('utf8');
+  assert.deepEqual([...csvBuf.subarray(0, 3)], [0xEF, 0xBB, 0xBF], 'BOM supaya Excel membaca UTF-8');
+  assert.match(csvTxt, /^\uFEFF"disimpan";"lapangan";"tim";"kegiatan";"jumlah_lap";"total";"lap_1";"lap_2"/);
+  assert.match(csvTxt, /"A";"IRIS";"Race 1";"2";"00:03.20";"00:01.00";"00:01.50"/);
+  assert.equal((await cmd({ op: 'delResult', i: 5 })).status, 400);
+  await cmd({ op: 'delResult', i: 0 }); s = (await next()).state; assert.equal(s.results.length, 0);
   await cmd({ op: 'reset', lanes: ['A', 'B'] }); s = (await next()).state; assert.deepEqual(s.delay, { A: 0, B: 0 });
   assert.equal(JSON.parse(fs.readFileSync(path.join(tmp, 's.json'))).delay.A, 0, 'state tersimpan ke disk');
 

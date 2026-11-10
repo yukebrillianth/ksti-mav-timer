@@ -6,6 +6,8 @@ const inText = s => { const m = Math.ceil(s / 60); return m <= 0 ? 'sekarang' : 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toSec = v => { const m = String(v).match(/^(\d{1,2})[:.](\d{2})(?:[:.](\d{2}))?$/); return m ? +m[1] * 3600 + +m[2] * 60 + +(m[3] || 0) : NaN; };
 const $ = id => document.getElementById(id);
+const fmtMs = ms => { const c = Math.max(0, Math.floor(ms / 10)), h = Math.floor(c / 360000), p = n => String(n).padStart(2, '0');
+  return (h ? h + ':' : '') + p(Math.floor(c / 6000) % 60) + ':' + p(Math.floor(c / 100) % 60) + '.' + p(c % 100); };
 const set = (el, html) => { if (el && el.__h !== html) { el.innerHTML = html; el.__h = html; } }; // hindari render ulang yang tidak perlu (tombol tetap bisa diklik)
 
 // Mode uji: tambahkan ?t=11:35&speed=60 di URL. Jadwal dipratinjau tanpa tunda; kontrol operator dimatikan.
@@ -73,6 +75,17 @@ function teamState(code, T) {
   if (!nxt) return { k: 'done' };
   return { k: T[nxt.lane] < a[0].s ? 'soon' : 'wait', nxt, rem: nxt.s - T[nxt.lane] };
 }
+// stopwatch lap manual (state dari server; dihitung dengan jam yang disinkron ke server)
+const swOf = id => D.state.sw?.[id];
+const swActive = w => w && (w.run || w.acc > 0 || w.laps.length > 0);
+const swElapsed = w => w.acc + (w.run ? Date.now() + OFF - w.t0 : 0);
+function renderSw(id, tenths) {
+  const w = swOf(id); if (!swActive(w)) return '';
+  const el = swElapsed(w), last = w.laps.length ? w.laps.at(-1) - (w.laps.at(-2) || 0) : null;
+  const t = fmtMs(el), shown = tenths ? t.slice(0, -1) : t; // layar penonton: persepuluh detik supaya tidak berkedip
+  return `<div class="swb${w.run ? ' run' : ''}"><span class="swk">${w.run ? 'Waktu race' : 'Stopwatch berhenti'}</span>
+    <span class="swt num">${shown}</span><span class="swl"><b class="num">${w.laps.length}</b> lap${last != null ? ` · lap terakhir <b class="num">${fmtMs(last)}</b>` : ''}</span></div>`;
+}
 const isPaused = id => !SIM && D.state.pausedAt[id] != null;
 const shiftChip = sh => Math.abs(sh) < 60 ? '' : `<span class="chip ${sh > 0 ? 'late' : 'early'}">${sh > 0 ? 'Mundur' : 'Maju'} ${Math.round(Math.abs(sh) / 60)} mnt</span>`;
 const teamLine = i => i.type === 'swap' ? 'Masuk: ' + name(i.team) : i.team ? name(i.team) : '';
@@ -106,6 +119,7 @@ function renderLane(l, W, T, nq) {
       <div class="status"><span class="k">${esc(k)}</span><span class="v">${esc(v)}</span></div>
       <div class="team${who.length > 22 ? ' long' : ''}">${esc(who)}</div>
       <div class="timer num">${timer}</div>${meter}<div class="range">${range}</div>
+      ${renderSw(l.id, nq <= 2)}
     </div>
     ${nq ? `<div class="q"><h3>Berikutnya di ${esc(l.name)}</h3>${q}</div>` : ''}
   </article>`;
