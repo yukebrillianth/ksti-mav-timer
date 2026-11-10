@@ -57,6 +57,7 @@ Suara tidak berbunyi saat jadwal dilompati, dijeda, atau simulasi di atas 2x. Un
 - **Ulang dari awal**: kegiatan yang sedang berjalan diulang (misal robot restart).
 - **Rundown lengkap → Mulai**: lompat ke kegiatan mana pun.
 - **Pengumuman**: teks kuning di layar penonton.
+- **Tema**: Gelap (TV/proyektor) atau Terang (gaya its.ac.id); semua layar ikut. Satu layar bisa dipaksa lewat `/?tema=terang` atau `/?tema=gelap`.
 - **Simulasi**: coba alur lomba di jam berapa pun (misal 09:00, 60x). Semua layar ikut dan berlabel SIMULASI. **Klik Stop sebelum lomba dimulai.** Tunda/jeda asli dikembalikan.
 
 ## Tes

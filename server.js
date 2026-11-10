@@ -108,6 +108,7 @@ function apply(cmd) {
     case 'simStop':
       if (state.sim) { Object.assign(state.delay, state.simSaved?.delay); Object.assign(state.pausedAt, state.simSaved?.pausedAt); }
       state.sim = null; state.simSaved = null; break;
+    case 'theme': if (!['gelap', 'terang'].includes(cmd.value)) throw 'tema tidak dikenal'; state.theme = cmd.value; break;
     default: throw 'perintah tidak dikenal';
   }
   fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2));

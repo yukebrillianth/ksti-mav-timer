@@ -18,7 +18,12 @@
   body.idle .snd.on { opacity: 0; pointer-events: none; }
   .lanes { min-height: 0; }
   .lane { min-height: 0; overflow: hidden; }
-  .timer { font-size: min(8.6vw, 15.5vh); }
+  .timer { font-size: calc(min(8.6vw, 15.5vh) * var(--k, 1)); }
+  .light .timer { font-size: calc(min(8.6vw, 15.5vh) * var(--k, 1)); }
+  .light .lanes { padding-top: 12px; padding-bottom: 4px; }
+  .light .lane-head { padding-top: 10px; padding-bottom: 10px; }
+  .light .now { padding-top: 12px; padding-bottom: 12px; }
+  .light .teams-sec { margin-top: 6px; margin-bottom: 12px; }
   .team { font-size: min(2.9vw, 5.6vh); } .team.long { font-size: min(2.2vw, 4.4vh); }
   .status { font-size: min(1.25vw, 2.4vh); }
   .q { font-size: min(1.05vw, 2.1vh); min-height: 0; }
@@ -28,6 +33,18 @@
   .teams { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: column; grid-template-rows: repeat(7, auto); }
   .tr { padding: .5vh 0; }
   .tr .tn { font-size: min(1vw, 2vh); } .tr .ts { font-size: min(.8vw, 1.6vh); } .tr .tt { font-size: min(1.15vw, 2.3vh); }
+  /* layar pendek: tabel tim mengalah ke panel lapangan */
+  .compact .teams { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(6, auto); column-gap: 20px; }
+  .compact .tr { grid-template-columns: 4px minmax(0, 1fr) auto; padding: .3vh 0; }
+  .compact .tr .ts, .compact .legend { display: none; }
+  .compact .teams-sec { padding-top: 4px; padding-bottom: 8px; }
+  .compact .q h3 { display: none; }
+  .compact .qi { padding: 5px 0; }
+  .light.compact .lanes { gap: 12px; padding-top: 8px; }
+  .light.compact .lane-head { padding-top: 6px; padding-bottom: 6px; }
+  .light.compact .now { padding-top: 8px; padding-bottom: 8px; }
+  .light.compact .q { padding-top: 2px; padding-bottom: 4px; }
+  .light.compact .teams-sec { margin-top: 4px; margin-bottom: 8px; padding-top: 6px !important; }
   @media (max-aspect-ratio: 4/3) { /* layar tegak / HP: boleh scroll */
     body { height: auto; overflow: auto; display: block; }
     .hero { grid-template-columns: 1fr; } .clock { text-align: left; }
@@ -62,12 +79,23 @@
 <script>
 function render() {
   if (!D) return;
+  const light = (Q.get('tema') || D.state.theme) === 'terang'; // ?tema=terang|gelap memaksa tema di layar ini
+  document.body.classList.toggle('light', light); document.body.classList.toggle('tv', !light);
   const { W, T } = clockTimes();
   renderCommon(W, T);
-  set($('lanes'), D.lanes.map(l => renderLane(l, W, T, 2)).join(''));
+  const h = D.lanes.map(l => renderLane(l, W, T, 2)).join('');
+  if ($('lanes').__h !== h) { set($('lanes'), h); fit(); }
   set($('teams'), TEAM_LIST.map(c => renderTeam(c, T, W)).join(''));
   Sound.update(D.lanes, T);
 }
+// timer mengecil sampai isi panel lapangan muat (layar kecil, nama tim panjang)
+function fit() {
+  const el = $('lanes'), b = document.body, over = () => [...el.children].some(c => c.scrollHeight > c.clientHeight + 1);
+  const shrink = min => { let k = 1; el.style.setProperty('--k', 1); while (over() && k > min) { k -= .04; el.style.setProperty('--k', k.toFixed(2)); } };
+  b.classList.remove('compact'); shrink(.72);       // 1) timer boleh mengecil sedikit
+  if (over()) { b.classList.add('compact'); shrink(.45); } // 2) masih sempit: tabel tim dipadatkan dulu, baru timer
+}
+addEventListener('resize', fit);
 connect(render);
 setInterval(render, 100); // 10x per detik: pergantian detik & suara telat maks 0,1 dtk
 // suara: browser butuh satu klik dulu. Pilihan nyala/mati diingat; bila 'nyala', klik apa pun (mis. dobel-klik layar penuh) langsung mengaktifkan.

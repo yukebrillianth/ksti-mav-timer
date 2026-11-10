@@ -150,6 +150,8 @@ test('server: perintah operator, PIN, validasi, siaran SSE', async t => {
   assert.ok(s.delay.A >= 1800 && s.delay.A <= 1800 + 120, 'startAt memakai jam simulasi, bukan jam asli');
   await cmd({ op: 'simStop' }); s = (await next()).state;
   assert.equal(s.sim, null); assert.equal(s.delay.B, savedB, 'tunda asli kembali setelah simulasi');
+  assert.equal((await cmd({ op: 'theme', value: 'pink' })).status, 400);
+  await cmd({ op: 'theme', value: 'terang' }); s = (await next()).state; assert.equal(s.theme, 'terang');
   await cmd({ op: 'reset', lanes: ['A', 'B'] }); s = (await next()).state; assert.deepEqual(s.delay, { A: 0, B: 0 });
   assert.equal(JSON.parse(fs.readFileSync(path.join(tmp, 's.json'))).delay.A, 0, 'state tersimpan ke disk');
 

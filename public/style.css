@@ -106,3 +106,39 @@ body { background: var(--bg); color: var(--ink); font: 15px/1.4 var(--f-body); }
 
 .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; color: var(--muted); }
 .legend i { display: inline-block; width: 12px; height: 12px; margin-right: 6px; vertical-align: -1px; }
+
+/* ===== Light mode persis its.ac.id: navbar putih, kartu putih bertitik, judul & angka bergradien biru ===== */
+.light { --bg: #f5fafd; --surface: #fff; --soft: #ebf2f6; --line: #e1e9ee; --ink: #132757; --muted: #5b6576;
+  --prep: #0c64c2; --race: #d4342c; --rest: #7d899b; --swap: #c27700; --hold: #c27700; --idle: #0c64c2; color-scheme: light; }
+.light .hero { background: #fff; color: var(--ink); border-bottom: 1px solid var(--line); }
+.light .logos { padding: 0; background: none; }
+.light .lsep { background: var(--line); }
+.light .g-white, .light .clock .big { background-image: linear-gradient(to bottom, #007bc0, #243e80); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.light .brand .sub, .light .clock .date { color: var(--muted); }
+.light .msg { background: var(--hero); color: #fff; }
+.light .eyebrow, .light .chip { display: inline-block; padding: 4px 10px; border-radius: 4px; background: var(--soft); color: #0c64c2; font-size: 14px; font-weight: 600; }
+.light .chip.late { background: #fff1d1; color: #8a5300; } .light .chip.early { background: #dcf5e6; color: #0b6b37; }
+.light .bar { border-radius: 4px; overflow: hidden; }
+.light .bar .fill { background: color-mix(in srgb, #0c64c2 30%, transparent); }
+.light .bar .mk b { border-radius: 3px; }
+.dots { background-color: #fff; background-image: radial-gradient(#dbe6ee 1px, transparent 1.3px); background-size: 14px 14px; }
+.light .lanes { gap: 20px; padding: 16px 28px 8px; }
+.light .lane { background: #fff; border: 1px solid var(--line); border-radius: 6px; padding: 0; }
+.light .lane + .lane { border-left: 1px solid var(--line); }
+.light .lane-head { padding: 14px 22px; border-bottom: 1px solid var(--line); }
+.light .lane-head .lt { border-radius: 4px; }
+.light .lane-head h2 { background-image: linear-gradient(to bottom, #007bc0, #243e80); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.light .now { padding: 16px 22px 18px; background-color: #fff; background-image: radial-gradient(#dbe6ee 1px, transparent 1.3px); background-size: 14px 14px; border-bottom: 1px solid var(--line); }
+.light .status .k { border-radius: 4px 0 0 4px; }
+.light .status .v { border-radius: 0 4px 4px 0; background: color-mix(in srgb, var(--c) 10%, #fff); color: var(--c); }
+.light .paused .status .v { color: var(--hold); }
+.light .urgent { --c: var(--race); } .light .paused { --c: var(--hold); }
+.light .timer, .light .tr .tt { background-image: linear-gradient(to bottom, color-mix(in srgb, var(--c) 82%, #fff), color-mix(in srgb, var(--c) 65%, #132757));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--c); }
+.light .tr:not(.live) .tt { --c: #0c64c2; }
+.light .meter { border-radius: 99px; overflow: hidden; background: var(--soft); }
+.light .meter i { border-radius: 99px; }
+.light .q { margin: 0; padding: 4px 22px 10px; border-top: 0; }
+.light .teams-sec { margin: 8px 28px 16px; padding: 12px 22px 10px !important; background: #fff; border: 1px solid var(--line); border-radius: 6px; }
+.light .teams { border-top: 1px solid var(--line); }
+.light .tr .tn { color: var(--ink); }
