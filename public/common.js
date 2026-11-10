@@ -137,5 +137,8 @@ function renderCommon(W, T) {
     PHASES.map(p => `<span class="ph" style="left:${pc(p.s)}%;width:${pc(p.e) - pc(p.s)}%">${esc(p.name)}</span>`).join('') +
     D.lanes[0].items.filter(i => i.type === 'rest').map(i => `<span class="rs" style="left:${pc(i.s)}%;width:${pc(i.e) - pc(i.s)}%" title="${esc(i.label)}"></span>`).join('') +
     D.lanes.map(l => `<i class="mk" style="left:${pc(T[l.id])}%"><b>${esc(l.id)}</b></i>`).join(''));
-  const m = $('msg'); m.hidden = !D.state.message; m.textContent = D.state.message;
+  const m = $('msg');
+  if (m.textContent !== D.state.message) { // pengumuman baru: kilatan ulang
+    m.textContent = D.state.message; m.classList.remove('fresh'); void m.offsetWidth; m.classList.toggle('fresh', !!D.state.message); }
+  m.hidden = !D.state.message;
 }

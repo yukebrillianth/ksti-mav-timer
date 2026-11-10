@@ -45,8 +45,10 @@ function build(rows, conf) {
         res.push({ s: ss, e: ss + gap, label: 'Pergantian tim', team: it.team, phase: it.phase, type: 'swap' });
         s = Math.max(s, ss + gap);
       }
-      res.push({ ...it, s, e: s + d, type: rest ? 'rest' : /^race/i.test(it.label) ? 'race' : 'prep' });
-      prevE = s + d; prevTeam = rest ? null : it.team;
+      // ISHOMA = jangkar jam Excel: kalau sebelumnya molor, ISHOMA dipendekkan (selesai tetap sesuai Excel), jadwal sesudahnya kembali pas
+      const e = rest ? Math.max(it.e, s + 60) : s + d;
+      res.push({ ...it, s, e, type: rest ? 'rest' : /^race/i.test(it.label) ? 'race' : 'prep' });
+      prevE = e; prevTeam = rest ? null : it.team;
     }
     lane.items = res;
   }
@@ -151,9 +153,22 @@ if (require.main === module) {
   for (const f of ['config.json', cfg.rundownFile || 'rundown.csv']) // edit file lalu simpan: semua layar ikut berubah
     fs.watchFile(path.join(DIR, f), { interval: 1000 }, () => { load(); broadcast(); });
   const PORT = +process.env.PORT || cfg.port || 8080;
+  // --buka: langsung buka layar operator & penonton di browser bawaan (dipakai MULAI.bat)
+  const openScreens = () => { if (!process.argv.includes('--buka')) return;
+    for (const u of [`http://localhost:${PORT}/operator`, `http://localhost:${PORT}/`]) {
+      const [c, a] = process.platform === 'win32' ? ['cmd', ['/c', 'start', '', u]] : process.platform === 'darwin' ? ['open', [u]] : ['xdg-open', [u]];
+      require('child_process').spawn(c, a, { stdio: 'ignore', detached: true }).on('error', () => { }).unref();
+    } };
+  server.on('error', e => {
+    if (e.code !== 'EADDRINUSE') throw e;
+    console.log(`\nPort ${PORT} sudah dipakai. Kemungkinan Timer MAV sudah jalan di jendela lain; layarnya dibuka saja.`);
+    openScreens(); setTimeout(() => process.exit(0), 1500);
+  });
   server.listen(PORT, () => {
     const ips = Object.values(os.networkInterfaces()).flat().filter(i => i.family === 'IPv4' && !i.internal).map(i => i.address);
     console.log(`\nTimer MAV jalan. Buka dari perangkat di jaringan yang sama:`);
     for (const ip of ['localhost', ...ips]) console.log(`  Penonton: http://${ip}:${PORT}/     Operator: http://${ip}:${PORT}/operator`);
+    console.log('\nJANGAN TUTUP jendela ini selama lomba. Tekan Ctrl+C untuk berhenti.');
+    openScreens();
   });
 }

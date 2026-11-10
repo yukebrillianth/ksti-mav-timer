@@ -5,11 +5,10 @@
 // Koreksi bug sumber (Excel aslinya tidak diubah):
 //   - jam < 07:00 = salah ketik 12 jam (02:35 -> 14:35)
 //   - Start Lapangan B berisi =B{baris} (selesai Lapangan A) -> dirantai dari kegiatan B sebelumnya
-//   - ISHOMA 1 dikunci 11:30-12:00 (keputusan panitia)
 // Jeda pergantian tim 30 dtk TIDAK ditulis di sini; server menyisipkannya otomatis.
 const fs = require('fs'), path = require('path'), zlib = require('zlib');
 
-const START_ROW = 6, ISHOMA1 = ['11:30', '12:00'];
+const START_ROW = 6;
 const COLS = { A: ['A', 'B', 'D', 'E'], B: ['G', 'H', 'J', 'K'] }; // start, end, keterangan, tim
 
 function unzip(buf) {
@@ -57,7 +56,6 @@ function convert(file) {
   const ws = readSheet(file, 'MAV');
   const isTime = v => typeof v === 'number' && v >= 0 && v < 1;
   const sec = v => { const s = Math.round(v * 1440) * 60; return s < 7 * 3600 ? s + 12 * 3600 : s; };
-  const S = x => { const [h, m] = x.split(':'); return h * 3600 + m * 60; };
   const H = s => String(Math.floor(s / 3600)).padStart(2, '0') + ':' + String(Math.floor(s % 3600 / 60)).padStart(2, '0');
   const babak = (tm, prev) => !tm ? prev : /CHALLENGE$/i.test(tm) ? 'Final Challenge' : /^TIM FINAL/i.test(tm) ? 'Final' : 'Penyisihan';
   const out = ['lapangan,mulai,selesai,kegiatan,tim,babak'];
@@ -69,7 +67,7 @@ function convert(file) {
       l = l.trim(); tm = typeof tm === 'string' && tm.trim() ? tm.trim() : null;
       let s0 = sec(s), e0 = sec(e);
       if (k === 'B' && lastEnd != null && (ws.formula('G' + r) || '').replace(/[\s=]/g, '') === 'B' + r) { e0 = lastEnd + (e0 - s0); s0 = lastEnd; }
-      if (l.toUpperCase() === 'ISHOMA') { nIsh++; tm = lastTeam = null; l = 'ISHOMA ' + nIsh; if (nIsh === 1) { s0 = S(ISHOMA1[0]); e0 = S(ISHOMA1[1]); } }
+      if (l.toUpperCase() === 'ISHOMA') { nIsh++; tm = lastTeam = null; l = 'ISHOMA ' + nIsh; }
       else if (tm) lastTeam = tm; else tm = lastTeam; // nama tim hanya ditulis di baris Persiapan
       ph = babak(tm, ph); lastEnd = e0;
       out.push([k, H(s0), H(e0), l, tm && tm.includes(',') ? `"${tm}"` : tm || '', ph].join(','));
@@ -82,9 +80,20 @@ module.exports = { convert };
 if (require.main === module) {
   const [src, dst = path.join(__dirname, '..', 'rundown.csv')] = process.argv.slice(2);
   if (!src) { console.error('Pakai: node tools/xlsx2csv.js "Rundown MAV.xlsx"'); process.exit(1); }
-  const csv = convert(src);
-  if (dst === '-') { process.stdout.write(csv); process.exit(0); }
-  if (fs.existsSync(dst)) fs.copyFileSync(dst, dst.replace(/\.csv$/, '.bak.csv'));
-  fs.writeFileSync(dst, csv);
-  console.log(`${csv.trim().split('\n').length - 1} kegiatan ditulis ke ${dst} (cadangan: ${path.basename(dst.replace(/\.csv$/, '.bak.csv'))})`);
+  try {
+    const csv = convert(src);
+    // validasi dulu dengan aturan server; kalau gagal, rundown lama tidak disentuh
+    const { parseCSV, build, check } = require('../server.js');
+    const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'config.json'), 'utf8'));
+    const lanes = build(parseCSV(csv), cfg), warn = check(lanes);
+    if (dst === '-') { process.stdout.write(csv); process.exit(0); }
+    if (fs.existsSync(dst)) fs.copyFileSync(dst, dst.replace(/\.csv$/, '.bak.csv'));
+    fs.writeFileSync(dst, csv);
+    const hms = s => [s / 3600, s % 3600 / 60, s % 60].map(x => String(Math.floor(x)).padStart(2, '0')).join(':');
+    console.log(`OK: ${csv.trim().split('\n').length - 1} kegiatan ditulis ke rundown.csv (versi lama disimpan di rundown.bak.csv)`);
+    lanes.forEach(l => console.log(`  ${l.name}: ${hms(l.items[0].s)} - ${hms(l.items.at(-1).e)}`));
+    if (warn.length) { console.log('\nPERIKSA, ada jadwal bentrok:'); warn.forEach(w => console.log('  - ' + w)); }
+  } catch (e) {
+    console.error('GAGAL membaca rundown: ' + (e.message || e) + '\nRundown lama tetap dipakai.'); process.exit(1);
+  }
 }

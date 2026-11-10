@@ -35,6 +35,13 @@ test('build: tidak ada pergantian setelah ISHOMA, ISHOMA bertipe rest', () => {
   assert.equal(H(A.items[2].s), '12:00:00');
 });
 
+test('build: ISHOMA jadi jangkar jam Excel walau sesi sebelumnya molor', () => {
+  const [A] = build(csv(['A,11:00,11:10,Persiapan,X', 'A,11:10,11:15,Race 1,X', 'A,11:15,11:20,Persiapan,Y', 'A,11:20,11:30,ISHOMA 1,', 'A,11:30,11:40,Persiapan,Z']), CFG);
+  const ish = A.items.find(i => i.type === 'rest'), z = A.items.at(-1);
+  assert.deepEqual([H(ish.s), H(ish.e)], ['11:20:30', '11:30:00'], 'mulai molor 30 dtk, selesai tetap');
+  assert.equal(H(z.s), '11:30:00', 'sesudah ISHOMA kembali ke jam Excel');
+});
+
 test('build: data rusak ditolak dengan nomor baris', () => {
   assert.throws(() => build(csv(['C,09:00,09:10,Persiapan,X']), CFG), /baris 2: lapangan "C"/);
   assert.throws(() => build(csv(['A,09:10,09:00,Persiapan,X']), CFG), /baris 2: jam/);
@@ -55,7 +62,8 @@ test('rundown.csv: aturan lomba terpenuhi', () => {
   for (const l of L) {
     const ish = l.items.filter(i => i.type === 'rest');
     assert.deepEqual(ish.map(i => i.label), ['ISHOMA 1', 'ISHOMA 2']);
-    assert.deepEqual([H(ish[0].s), H(ish[0].e)], ['11:30:00', '12:00:00'], l.name + ' ISHOMA 1 dikunci 30 mnt');
+    const csvIsh = parseCSV(fs.readFileSync(path.join(__dirname, cfg.rundownFile), 'utf8')).filter(r => r.lapangan === l.id && /^ishoma/i.test(r.kegiatan));
+    ish.forEach((i, k) => assert.equal(i.e, toSec(csvIsh[k].selesai), `${l.name} ${i.label} selesai sesuai Excel`));
     assert.equal(l.items[0].s, l.id === 'A' ? 9 * 3600 : 9 * 3600 + 300);
   }
   assert.deepEqual(check(L), []);
