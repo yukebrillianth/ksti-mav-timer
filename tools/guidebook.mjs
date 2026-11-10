@@ -34,14 +34,17 @@ html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin: 0; font: 10.5pt/1.55 'Work Sans', sans-serif; color: #2b3445; }
 .g, h1, h2 { font-family: 'Friz', Georgia, serif; font-weight: 500; letter-spacing: -.01em; color: #0b5fa5; } /* solid: teks bergradien meninggalkan garis kotak saat dicetak */
 /* sampul */
-.cover { height: 252mm; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-between; padding: 26mm 22mm 20mm; color: #fff;
+.cover { position: relative; overflow: hidden; height: 252mm; border-radius: 6px; display: flex; flex-direction: column; justify-content: space-between; padding: 26mm 22mm 20mm; color: #fff;
   background: radial-gradient(344% 189% at 50% 0%, #007bc0 0%, #243e80 100%); break-after: page; }
+.cover::before { content: ""; position: absolute; inset: 0; background: url(img/its-pattern.svg) 0 0 / 24mm 24.2mm; opacity: .13; } /* pola ornamen its.ac.id */
+.cover::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 35%, rgba(36, 62, 128, .85)); } /* pola memudar ke bawah supaya teks terbaca */
+.cover > * { position: relative; z-index: 1; }
 .cover .logos { display: inline-flex; gap: 14px; align-items: center; background: #fff; padding: 10px 18px; border-radius: 4px; align-self: flex-start; }
 .cover .logos img { height: 52px; } .cover .logos img.its { height: 66px; } .cover .lsep { width: 1px; align-self: stretch; background: #d3e0ea; }
 .cover .eyebrow { display: inline-block; background: rgba(255,255,255,.14); padding: 5px 12px; border-radius: 4px; font-weight: 600; letter-spacing: .04em; }
 .cover h1 { break-before: auto; margin: 14px 0 10px; font-size: 44pt; line-height: 1.05; color: #fff; }
 .cover .sub { font-size: 14pt; color: #d6e7f5; max-width: 140mm; }
-.cover .meta { font-size: 10pt; color: #cfe3f3; border-top: 1px solid rgba(255,255,255,.3); padding-top: 10px; display: flex; justify-content: space-between; }
+.cover .meta { font-size: 10pt; color: #cfe3f3; border-top: 1px solid rgba(255,255,255,.3); padding-top: 10px; display: flex; justify-content: space-between; gap: 10mm; } .cover .meta span:last-child { white-space: nowrap; }
 /* daftar isi */
 .toc { break-after: page; }
 .toc-h { font-size: 26pt; margin: 0 0 8mm; break-before: auto; }
