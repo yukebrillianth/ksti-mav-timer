@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Operator · Timer MAV</title>
+<link rel="icon" href="img/its.png">
+<link rel="stylesheet" href="style.css">
+<style>
+  .hero { grid-template-columns: auto 1fr auto; padding: 12px 20px 16px; }
+  .logos img { height: 34px; } .logos img.its { height: 44px; }
+  .brand h1 { font-size: clamp(22px, 2.4vw, 34px); }
+  .clock .big { font-size: clamp(34px, 3.6vw, 52px); }
+  .page { max-width: 1500px; margin: 0 auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; }
+  .card > h2 { font-size: 22px; margin-bottom: 10px; }
+  .alert { border-radius: 12px; padding: 12px 16px; font-weight: 600; background: #fde3e1; color: #8a1712; border: 1px solid #f3b4ae; white-space: pre-line; }
+  .alert.warn { background: #fff4d6; color: #6b4a00; border-color: #f1d48a; }
+  .simon { background: #8a5cf6; color: #fff; border-color: #8a5cf6; font-size: 18px; }
+  select { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+  .sim { background: #e6dcff; color: #3d2580; border-color: #c9b6ff; }
+  .ctlgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .ctl { display: flex; flex-direction: column; gap: 10px; }
+  .btns { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .btns .lab { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); min-width: 92px; }
+  button, input { font: inherit; color: var(--ink); background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 8px 14px; }
+  button { cursor: pointer; font-weight: 600; }
+  button:hover { border-color: var(--its-blue); }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--its-blue); outline-offset: 2px; }
+  button.pri { background: var(--its-navy); border-color: var(--its-navy); color: #fff; }
+  button.warn { background: var(--its-gold); border-color: var(--its-gold); color: #132757; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  input { background: var(--surface); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .row input { flex: 1 1 260px; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; }
+  .sec-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .sec-row h2 { font-size: 22px; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips button { padding: 5px 12px; font-size: 13px; }
+  .chips button[aria-pressed="true"] { background: var(--its-navy); color: #fff; border-color: var(--its-navy); }
+  .names { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px 16px; }
+  .names label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 700; color: var(--muted); letter-spacing: .04em; }
+  .names input { font-size: 15px; font-weight: 400; color: var(--ink); }
+  .rd { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .rd-col { max-height: 520px; overflow: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  th { position: sticky; top: 0; background: var(--soft); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); z-index: 1; }
+  td.tm { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  td.tm small { display: block; color: var(--muted); }
+  tr.past td { color: var(--muted); opacity: .6; }
+  tr.cur td { background: color-mix(in srgb, var(--its-blue) 14%, var(--surface)); font-weight: 600; }
+  td .sw { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--c); margin-right: 6px; }
+  td button { padding: 3px 9px; font-size: 12px; }
+  .toast { position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); background: #132757; color: #fff; padding: 10px 18px; border-radius: 10px; font-weight: 600; z-index: 9; box-shadow: 0 6px 24px rgba(0,0,0,.3); }
+  .toast.err { background: #b3261e; }
+  @media (max-width: 900px) { .ctlgrid, .rd { grid-template-columns: 1fr; } .hero { grid-template-columns: 1fr; } .clock { text-align: left; } }
+</style>
+</head>
+<body>
+<header class="hero">
+  <div class="logos"><img src="img/ksti.png" alt="KSTI 26"><span class="lsep"></span><img src="img/its.png" class="its" alt="ITS"></div>
+  <div class="brand"><h1 class="g-white">Operator Timer MAV</h1><div class="sub">Layar penonton: <a id="dlink" style="color:#fff" target="_blank" href="/">/</a> · klik dua kali di layar penonton untuk layar penuh</div></div>
+  <div class="clock"><div class="num big" id="clock">--:--:--</div><div class="date"><span id="date"></span> · WIB<span id="conn" class="conn"></span></div></div>
+</header>
+<p class="msg" id="msg" hidden></p>
+
+<div class="page">
+  <div class="alert sim" id="simnote" hidden>Mode uji (?t=…): jadwal dipratinjau tanpa tunda dan semua kontrol dimatikan. Hapus ?t=… dari alamat untuk kembali ke mode nyata.</div>
+  <div class="alert" id="offline" hidden>Terputus dari server. Timer tetap berjalan dengan data terakhir; perintah tidak bisa dikirim. Pastikan <code>node server.js</code> masih jalan.</div>
+  <div class="alert" id="err" hidden></div>
+  <div class="alert warn" id="warn" hidden></div>
+
+  <form class="card row" id="gate" hidden>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="PIN operator (lihat config.json)" aria-label="PIN operator">
+    <button class="pri">Masuk</button>
+  </form>
+
+  <div class="alert simon" id="simon" hidden></div>
+  <section class="card track" aria-label="Progres lomba">
+    <div class="track-head"><span id="phase"></span><span id="overall"></span></div>
+    <div class="bar" id="bar"></div>
+  </section>
+
+  <section class="ctlgrid" id="ctlgrid"></section>
+
+  <section class="card ctl" id="both">
+    <h2 class="g-head">Kedua lapangan</h2>
+    <div class="btns"><span class="lab">Geser jadwal</span>
+      <button data-op="shift" data-l="*" data-v="-60">−1 mnt</button><button data-op="shift" data-l="*" data-v="60">+1 mnt</button><button data-op="shift" data-l="*" data-v="300">+5 mnt</button>
+      <button data-op="pause" data-l="*" class="warn">Jeda semua</button><button data-op="resume" data-l="*">Lanjut semua</button><button data-op="reset" data-l="*">Reset ke jadwal asli</button></div>
+    <p class="hint">“+5 mnt” = jadwal mundur 5 menit (kegiatan dimulai lebih lambat). Semua layar penonton ikut berubah saat itu juga.</p>
+  </section>
+
+  <section class="card ctl">
+    <h2 class="g-head">Simulasi (uji coba)</h2>
+    <form class="btns" id="simform"><span class="lab">Mulai dari</span><input type="time" id="simstart" value="09:00" step="1" aria-label="Jam simulasi">
+      <select id="simspeed" aria-label="Kecepatan"><option value="1">1x (waktu nyata)</option><option value="10">10x</option><option value="60" selected>60x (1 dtk = 1 mnt)</option><option value="300">300x</option></select>
+      <button class="pri">Mulai simulasi</button><button type="button" id="simspd">Ubah kecepatan saja</button><button type="button" id="simstop" class="warn">Stop, kembali ke waktu nyata</button></form>
+    <p class="hint">Semua layar ikut jam simulasi dan tombol operator tetap berfungsi, jadi alur lomba bisa dicoba utuh. Layar penonton menampilkan label SIMULASI. Saat dihentikan, tunda/jeda dikembalikan seperti sebelum simulasi.</p>
+  </section>
+
+  <section class="card ctl">
+    <h2 class="g-head">Pengumuman di layar penonton</h2>
+    <form class="row" id="msgform"><input id="msgin" maxlength="200" placeholder="mis. Babak Final dimulai 16:00 di kedua lapangan"><button class="pri">Tampilkan</button><button type="button" id="msgclr">Hapus</button></form>
+  </section>
+
+  <section>
+    <div class="sec-row"><h2 class="g-head">Timer per tim</h2><div class="chips" id="chips"></div></div>
+    <div class="teams" id="teams"></div>
+  </section>
+
+  <section class="card">
+    <h2 class="g-head">Nama tim</h2>
+    <p class="hint" style="margin-bottom:10px">Isi nama finalis setelah penyisihan selesai. Kosongkan untuk kembali ke nama di rundown. Tersimpan otomatis.</p>
+    <div class="names" id="names"></div>
+  </section>
+
+  <section class="card">
+    <h2 class="g-head">Rundown lengkap</h2>
+    <p class="hint" style="margin-bottom:10px">Jam atas = jadwal asli, jam bawah = perkiraan setelah digeser. “Mulai” = kegiatan itu dimulai sekarang di lapangannya, dan semua kegiatan sesudahnya ikut bergeser.</p>
+    <div class="rd" id="rd"></div>
+  </section>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="common.js"></script>
+<script>
+let PIN = ''; try { PIN = localStorage.getItem('mav-pin') || ''; } catch { }
+let authed = false, filter = 'all', built = false;
+
+function toast(t, err) { const e = $('toast'); e.textContent = t; e.className = 'toast' + (err ? ' err' : ''); e.hidden = false; clearTimeout(e._t); e._t = setTimeout(() => e.hidden = true, 2600); }
+async function cmd(body) {
+  if (SIM) return toast('Mode uji: kontrol dimatikan', 1);
+  try {
+    const r = await fetch('/api/cmd', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, pin: PIN }) });
+    if (r.status === 401) { authed = false; PIN = ''; try { localStorage.removeItem('mav-pin'); } catch { } gate(); throw new Error('PIN salah'); }
+    if (!r.ok) throw new Error(await r.text());
+    if (body.op !== 'auth') toast('Terkirim ke semua layar');
+    return true;
+  } catch (e) { toast('Gagal: ' + (e.message || e), 1); return false; }
+}
+function gate() {
+  $('gate').hidden = authed || !!SIM;
+  document.querySelectorAll('#ctlgrid button, #both button, #msgform button, #msgclr, #simform button, #simform input, #simform select, #names input, #rd button').forEach(b => b.disabled = !authed || !!SIM);
+}
+$('gate').onsubmit = async e => { e.preventDefault(); PIN = $('pin').value.trim(); if (await cmd({ op: 'auth' })) { authed = true; try { localStorage.setItem('mav-pin', PIN); } catch { } gate(); toast('Masuk sebagai operator'); } };
+
+// kontrol per lapangan (dibuat sekali, tidak dirender ulang supaya tombol selalu bisa diklik)
+function build() {
+  $('ctlgrid').innerHTML = D.lanes.map(l => `<div class="ctl">
+    <div id="lane-${l.id}"></div>
+    <div class="card ctl">
+      <div class="btns"><span class="lab">Geser</span><button data-op="shift" data-l="${l.id}" data-v="-60">−1 mnt</button><button data-op="shift" data-l="${l.id}" data-v="-10">−10 dtk</button><button data-op="shift" data-l="${l.id}" data-v="10">+10 dtk</button><button data-op="shift" data-l="${l.id}" data-v="60">+1 mnt</button><button data-op="shift" data-l="${l.id}" data-v="300">+5 mnt</button></div>
+      <div class="btns"><span class="lab">Kegiatan</span><button data-op="toggle" data-l="${l.id}" class="warn" id="tg-${l.id}">Jeda</button><button data-op="restart" data-l="${l.id}">Ulang dari awal</button><button data-op="next" data-l="${l.id}" class="pri">Mulai berikutnya sekarang</button><button data-op="reset" data-l="${l.id}">Reset</button></div>
+    </div></div>`).join('');
+  built = true; gate();
+}
+const lanesOf = b => b.dataset.l === '*' ? D.lanes.map(l => l.id) : [b.dataset.l];
+document.addEventListener('click', async e => {
+  const f = e.target.closest('[data-f]'); if (f) { filter = f.dataset.f; render(); return; }
+  const b = e.target.closest('button[data-op]'); if (!b || b.disabled) return;
+  const lanes = lanesOf(b), op = b.dataset.op, { T } = clockTimes(), l = D.lanes.find(x => x.id === lanes[0]);
+  const st = l && laneState(l, T[l.id]);
+  if (op === 'shift') return cmd({ op, lanes, sec: +b.dataset.v });
+  if (op === 'pause' || op === 'resume') return cmd({ op, lanes });
+  if (op === 'toggle') return cmd({ op: isPaused(l.id) ? 'resume' : 'pause', lanes });
+  if (op === 'reset') return confirm(`Kembalikan ${lanes.length > 1 ? 'semua lapangan' : l.name} ke jadwal asli? Tunda dan jeda dihapus.`) && cmd({ op, lanes });
+  if (op === 'restart') { if (!st.cur) return toast('Tidak ada kegiatan yang berjalan', 1);
+    return confirm(`Ulang "${st.cur.label}${st.cur.team ? ' · ' + name(st.cur.team) : ''}" di ${l.name} dari awal?`) && cmd({ op: 'startAt', lanes, s: st.cur.s }); }
+  if (op === 'next') { const n = st.queue[0]; if (!n) return toast('Tidak ada kegiatan berikutnya', 1);
+    return confirm(`Mulai "${n.label}${n.team ? ' · ' + teamLine(n) : ''}" di ${l.name} sekarang?`) && cmd({ op: 'startAt', lanes, s: n.s }); }
+  if (op === 'jump') { const it = l.items[+b.dataset.i];
+    return confirm(`Mulai "${it.label}${it.team ? ' · ' + teamLine(it) : ''}" di ${l.name} SEKARANG?\nSemua kegiatan sesudahnya di ${l.name} ikut bergeser.`) && cmd({ op: 'startAt', lanes, s: it.s }); }
+});
+$('msgform').onsubmit = e => { e.preventDefault(); cmd({ op: 'message', text: $('msgin').value }).then(ok => ok && toast('Pengumuman tampil')); };
+$('simform').onsubmit = e => { e.preventDefault(); const st = $('simstart').value, sp = $('simspeed').value;
+  if (confirm(`Mulai simulasi dari ${st} dengan kecepatan ${sp}x?\nSEMUA layar penonton ikut jam simulasi sampai kamu klik Stop.`)) cmd({ op: 'sim', start: st, speed: +sp }); };
+$('simspd').onclick = () => D.state.sim ? cmd({ op: 'sim', speed: +$('simspeed').value }) : toast('Simulasi belum berjalan', 1);
+$('simstop').onclick = () => D.state.sim ? cmd({ op: 'simStop' }) : toast('Simulasi tidak sedang berjalan', 1);
+$('msgclr').onclick = () => cmd({ op: 'message', text: '' }).then(ok => { if (ok) { $('msgin').value = ''; toast('Pengumuman dihapus'); } });
+$('names').addEventListener('change', e => { const i = e.target.closest('input[data-code]'); if (i) cmd({ op: 'name', code: i.dataset.code, name: i.value }).then(ok => ok && toast('Nama tersimpan')); });
+
+function onData() {
+  if (!built) build();
+  $('err').hidden = !D.error; $('err').textContent = D.error ? 'Rundown GAGAL dimuat ulang, layar masih memakai data lama:\n' + D.error : '';
+  $('warn').hidden = !D.warnings?.length; $('warn').textContent = D.warnings?.length ? 'Periksa rundown:\n' + D.warnings.join('\n') : '';
+  if (!$('names').contains(document.activeElement)) {
+    const codes = [...new Set([...Object.keys(D.teams), ...TEAM_LIST])];
+    $('names').innerHTML = codes.map(c => `<label>${esc(c)}<input data-code="${esc(c)}" value="${esc(D.state.names[c] || D.teams[c] || '')}" placeholder="${esc(c)}" maxlength="60"></label>`).join('');
+  }
+  gate(); render();
+}
+
+function render() {
+  if (!D) return;
+  const { W, T } = clockTimes();
+  renderCommon(W, T);
+  $('offline').hidden = online || !!SIM; $('simnote').hidden = !SIM;
+  $('simon').hidden = !D.state.sim;
+  if (D.state.sim) $('simon').textContent = `SIMULASI AKTIF (${D.state.sim.speed}x). Semua layar memakai jam simulasi ${hm(W).padEnd(8, ':00').slice(0, 8)}. Klik "Stop, kembali ke waktu nyata" sebelum lomba dimulai.`;
+  D.lanes.forEach(l => {
+    set($('lane-' + l.id), renderLane(l, W, T, 4));
+    const tg = $('tg-' + l.id); if (tg) tg.textContent = isPaused(l.id) ? 'Lanjutkan' : 'Jeda';
+  });
+  // tim + filter
+  const ks = TEAM_LIST.map(c => [c, teamState(c, T).k]);
+  const cnt = { all: ks.length, live: ks.filter(x => x[1] === 'live').length, done: ks.filter(x => x[1] === 'done').length }; cnt.wait = cnt.all - cnt.live - cnt.done;
+  set($('chips'), [['all', 'Semua'], ['live', 'Berlangsung'], ['wait', 'Menunggu'], ['done', 'Selesai']].map(([k, t]) => `<button data-f="${k}" aria-pressed="${filter === k}">${t} ${cnt[k]}</button>`).join(''));
+  const list = ks.filter(([, k]) => filter === 'all' || k === filter || (filter === 'wait' && k === 'soon')).map(x => x[0]);
+  set($('teams'), list.length ? list.map(c => renderTeam(c, T, W)).join('') : '<div class="empty">Tidak ada tim pada kategori ini.</div>');
+  // rundown: hanya dirender ulang bila kegiatan berjalan atau tunda (per menit) berubah
+  const html = D.lanes.map(l => {
+    const t = T[l.id], sh = W - t, shm = Math.round(sh / 60) * 60;
+    return `<div><h3 class="g-head" style="margin:0 0 6px;font-size:18px">${esc(l.name)}</h3><div class="rd-col"><table><thead><tr><th>Jam</th><th>Kegiatan</th><th>Tim</th><th></th></tr></thead><tbody>` +
+      l.items.map((i, k) => `<tr class="t-${i.type} ${i.e <= t ? 'past' : i.s <= t ? 'cur' : ''}"><td class="tm">${hm(i.s)}${shm ? `<small>${hm(i.s + shm)}</small>` : ''}</td>
+        <td><span class="sw"></span>${esc(i.label)}</td><td>${esc(teamLine(i))}</td><td><button data-op="jump" data-l="${l.id}" data-i="${k}" ${authed && !SIM ? '' : 'disabled'}>Mulai</button></td></tr>`).join('') +
+      '</tbody></table></div></div>';
+  }).join('');
+  if ($('rd').__h !== html) { set($('rd'), html); }
+}
+
+connect(onData);
+setInterval(render, 250);
+if (PIN && !SIM) cmd({ op: 'auth' }).then(ok => { authed = ok; gate(); }); else gate();
+$('dlink').textContent = location.origin + '/';
+</script>
+</body>
+</html>

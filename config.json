@@ -1,0 +1,26 @@
+{
+  "title": "Mini Autonomous Vehicle",
+  "subtitle": "KSTI 2026 · Institut Teknologi Sepuluh Nopember",
+  "operatorPin": "2026",
+  "port": 8080,
+  "rundownFile": "rundown.csv",
+  "swapSeconds": 30,
+  "lanes": [
+    {
+      "id": "A",
+      "name": "Lapangan A"
+    },
+    {
+      "id": "B",
+      "name": "Lapangan B"
+    }
+  ],
+  "teams": {
+    "TIM FINAL 1": "",
+    "TIM FINAL 2": "",
+    "TIM FINAL 3": "",
+    "TIM FINAL 1 CHALLENGE": "",
+    "TIM FINAL 2 CHALLENGE": "",
+    "TIM FINAL 3 CHALLENGE": ""
+  }
+}
