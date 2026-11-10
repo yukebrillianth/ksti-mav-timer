@@ -89,12 +89,42 @@ Setiap tombol penting meminta konfirmasi. Baca nama lapangan dan tim di kotak ko
 
 ---
 
-## F. Pergantian ke Babak Final
+## F. Babak Final dan Final Challenge
 
-1. Setelah penyisihan selesai dan finalis diumumkan juri: halaman operator → **Nama tim**.
-2. Isi nama asli untuk `TIM FINAL 1/2/3` dan `TIM FINAL 1/2/3 CHALLENGE` (urutan sesuai keputusan juri). Nama tersimpan otomatis dan langsung tampil di layar.
-3. Cek ulang di layar penonton bahwa nama di kartu lapangan sudah benar.
-4. Opsional: pengumuman *"Babak Final dimulai pukul 16:00"*.
+Di rundown, finalis masih ditulis sebagai kode **`TIM FINAL 1/2/3`** dan **`TIM FINAL 1/2/3 CHALLENGE`**. Nama aslinya diisi Operator setelah juri mengumumkan finalis. Rundown/Excel **tidak perlu diubah**.
+
+### F1. Urutan Final (sesuai rundown)
+
+| Babak | Kode | Lapangan | Persiapan 1 | Selesai |
+|---|---|---|---|---|
+| Final | TIM FINAL 1 | A | 16:00 | 16:45 |
+| Final | TIM FINAL 2 | B | 16:05 | 16:50 |
+| Final | TIM FINAL 3 | A | 16:45:30 | 17:30:30 |
+| Final Challenge | TIM FINAL 1 CHALLENGE | B | 16:50:30 | 17:35:30 |
+| Final Challenge | TIM FINAL 2 CHALLENGE | B | 17:36 | 18:21 |
+| Final Challenge | TIM FINAL 3 CHALLENGE | B | 18:21:30 | 19:06:30 |
+
+Setiap tim: Persiapan 10 menit → Race 5 menit, sebanyak 3 kali. Semua Final Challenge di **Lapangan B**. Jadwal lengkap per tim ada di [Lampiran](#lampiran-jadwal-per-tim).
+
+### F2. Langkah setelah penyisihan selesai (saat ISHOMA 2, 15:45–16:00)
+
+1. Juri menyerahkan **urutan finalis** ke Operator, dalam bentuk: Final 1 = …, Final 2 = …, Final 3 = …, dan Challenge 1/2/3 = ….
+2. Halaman operator → bagian **Nama tim** → isi kolom:
+   - `TIM FINAL 1`, `TIM FINAL 2`, `TIM FINAL 3`
+   - `TIM FINAL 1 CHALLENGE`, `TIM FINAL 2 CHALLENGE`, `TIM FINAL 3 CHALLENGE`
+
+   Kalau peserta Challenge sama dengan finalis, isi dengan nama yang sama. Nama tersimpan saat pindah kolom (Tab/klik di luar) dan langsung tampil di semua layar.
+3. **Cek ulang di layar penonton**: tabel *Semua tim* dan kartu lapangan sudah menampilkan nama asli. Salah ketik? Perbaiki di kolom yang sama.
+4. Koordinator Lapangan A dan B mencatat siapa main di lapangannya (tabel F1).
+5. Opsional: pengumuman *"Babak Final dimulai pukul 16:00"*.
+
+### F3. Hal yang perlu diperhatikan
+
+- **Finalis 1 ikut Challenge 1**: selesai di Lapangan A pukul **16:45**, lalu Persiapan Challenge di Lapangan B pukul **16:50:30**. Hanya ada ±5 menit untuk pindah lapangan. Koordinator A langsung mengarahkan tim ke Lapangan B.
+- Kalau Final di Lapangan A molor, Challenge 1 di Lapangan B **tidak ikut mundur otomatis** (jadwal tiap lapangan berdiri sendiri). Tunggu timnya: tekan **Jeda** atau **+1 mnt** di Lapangan B sampai tim siap.
+- Kalau finalis tidak sampai 3 tim, atau ada Challenge yang ditiadakan: gunakan **Rundown lengkap → Mulai** untuk melompati slot itu, atau minta pengelola rundown menghapus barisnya di Excel lalu jalankan `UPDATE-RUNDOWN.bat`.
+- Nama di kolom *Nama tim* juga bisa dikosongkan untuk kembali menampilkan kode (`TIM FINAL 1`, dst.).
+- Di tabel *Semua tim*, finalis yang juga ikut Challenge tampil **dua baris** (Final dan Challenge). Ini normal.
 
 ---
 
@@ -115,3 +145,47 @@ Setiap tombol penting meminta konfirmasi. Baca nama lapangan dan tim di kotak ko
 1. Hapus pengumuman (atau tampilkan *"Terima kasih"*).
 2. Tutup jendela hitam server (atau tekan **Ctrl + C**).
 3. Untuk dipakai lagi dari awal (lomba/gladi berikutnya): hapus `state.json` sebelum menjalankan `MULAI.bat`.
+
+---
+
+## Lampiran: jadwal per tim
+
+Dihitung dari rundown saat ini (sudah termasuk jeda pergantian tim 30 detik). Kalau rundown di-update, jadwal terkini selalu ada di halaman operator → **Rundown lengkap**. Jam bisa bergeser kalau Operator menunda atau menjeda.
+
+### Penyisihan
+
+| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
+|---|---|---|---|---|---|---|
+| A | Bertuah Punya Budak! | 09:00 | 09:10 | 09:25 | 09:40 | 09:45 |
+| B | Arc 2 | 09:05 | 09:15 | 09:30 | 09:45 | 09:50 |
+| A | Aetherion | 09:45:30 | 09:55:30 | 10:10:30 | 10:25:30 | 10:30:30 |
+| B | Arc 1 | 09:50:30 | 10:00:30 | 10:15:30 | 10:30:30 | 10:35:30 |
+| A | Ledrek | 10:31 | 10:41 | 10:56 | 11:11 | 11:16 |
+| B | WISANGGENI | 10:36 | 10:46 | 11:01 | 11:16 | 11:21 |
+| A | Mochamad Syamsul Huda Ramdani | 12:00 | 12:10 | 12:25 | 12:40 | 12:45 |
+| B | Doa_ibu-Ibu | 12:05 | 12:15 | 12:30 | 12:45 | 12:50 |
+| A | Jrevo Unej | 12:45:30 | 12:55:30 | 13:10:30 | 13:25:30 | 13:30:30 |
+| B | Espyro | 12:50:30 | 13:00:30 | 13:15:30 | 13:30:30 | 13:35:30 |
+| A | IRIS | 13:31 | 13:41 | 13:56 | 14:11 | 14:16 |
+| B | Mizuro Um | 13:36 | 13:46 | 14:01 | 14:16 | 14:21 |
+| A | Erucokro Team | 14:16:30 | 14:26:30 | 14:41:30 | 14:56:30 | 15:01:30 |
+| B | Krakatau Taurus | 14:21:30 | 14:31:30 | 14:46:30 | 15:01:30 | 15:06:30 |
+| A | Abhinaya | 15:02 | 15:12 | 15:27 | 15:42 | 15:47 |
+
+### Final
+
+| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
+|---|---|---|---|---|---|---|
+| A | TIM FINAL 1 | 16:00 | 16:10 | 16:25 | 16:40 | 16:45 |
+| B | TIM FINAL 2 | 16:05 | 16:15 | 16:30 | 16:45 | 16:50 |
+| A | TIM FINAL 3 | 16:45:30 | 16:55:30 | 17:10:30 | 17:25:30 | 17:30:30 |
+
+### Final Challenge
+
+| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
+|---|---|---|---|---|---|---|
+| B | TIM FINAL 1 CHALLENGE | 16:50:30 | 17:00:30 | 17:15:30 | 17:30:30 | 17:35:30 |
+| B | TIM FINAL 2 CHALLENGE | 17:36 | 17:46 | 18:01 | 18:16 | 18:21 |
+| B | TIM FINAL 3 CHALLENGE | 18:21:30 | 18:31:30 | 18:46:30 | 19:01:30 | 19:06:30 |
+
+ISHOMA 1: 11:20–12:00 (Lapangan B mulai 11:21). ISHOMA 2: 15:45–16:00 (Lapangan A mulai 15:47). Mulai sedikit lebih lambat karena jeda pergantian tim; selesainya tetap sesuai Excel.
