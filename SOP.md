@@ -50,18 +50,18 @@ Sepakati dengan juri sebelum lomba: timer ini menjadi acuan **jadwal** (kapan pe
 
 Timer berjalan sendiri mengikuti rundown. **Dalam kondisi normal Operator tidak perlu menekan apa pun.**
 
-1. **Pergantian tim (30 detik):** layar menampilkan *"Masuk: [nama tim]"*. Koordinator memanggil tim berikutnya.
-2. **Persiapan (10 menit):** bunyi *ding-ding* saat sisa 1 menit, lalu **tik ×5** di 5 detik terakhir.
-3. **Race (5 menit):** bunyi **GO** saat mulai; **tik ×5** di 5 detik terakhir; **buzzer** saat selesai.
-4. **Stopwatch lap** (Operator, di kartu lapangan yang sama):
+Setiap slot di lapangan = **Persiapan 10 menit → Race 5 menit** untuk satu tim. Layar menampilkan race ke berapa (*Race 1/2/3*). Tiap tim main 3 kali dan **berpindah lapangan** antar-race (misalnya Race 1 di A, Race 2 di B, Race 3 di A; lihat [Lampiran](#lampiran-jadwal-per-tim)). Tidak ada jeda pergantian: begitu race selesai, Persiapan tim berikutnya langsung berjalan, jadi Koordinator memanggil tim berikutnya (lihat *Berikutnya* di layar) **sebelum** race selesai.
+
+1. **Persiapan (10 menit):** bunyi *ding-ding* saat sisa 1 menit, lalu **tik ×5** di 5 detik terakhir.
+2. **Race (5 menit):** bunyi **GO** saat mulai; **tik ×5** di 5 detik terakhir; **buzzer** saat selesai.
+3. **Stopwatch lap** (Operator, di kartu lapangan yang sama):
    - Robot mulai jalan → **Start**.
    - Robot melewati garis lap → tekan tombol **1** di keyboard (Lapangan A) atau **2** (Lapangan B), atau klik **Lap**. Keyboard lebih presisi daripada mouse.
    - Salah tekan → **Batal lap**.
    - Robot finis / race selesai → **Stop**.
-   - Sebelum tim berikutnya → **Reset & simpan**. Hasil (tim, kegiatan, jumlah lap, waktu per lap) masuk ke tabel **Hasil stopwatch**.
+   - Setelah race → **Reset & simpan**. Hasil (tim, race ke berapa, jumlah lap, waktu per lap) masuk ke tabel **Hasil stopwatch**.
 
    Penonton melihat **Waktu race** dan jumlah lap di panel lapangan.
-5. Ulangi untuk Race 2 dan Race 3.
 
 Operator memantau dua hal: **pesan dari koordinator** dan **kotak "Mundur X mnt"** di kartu lapangan (artinya jadwal lapangan itu sedang tergeser).
 
@@ -105,18 +105,26 @@ Di rundown, finalis masih ditulis sebagai kode **`TIM FINAL 1/2/3`** dan **`TIM 
 
 ### F1. Urutan Final (sesuai rundown)
 
-| Babak | Kode | Lapangan | Persiapan 1 | Selesai |
-|---|---|---|---|---|
-| Final | TIM FINAL 1 | A | 16:00 | 16:45 |
-| Final | TIM FINAL 2 | B | 16:05 | 16:50 |
-| Final | TIM FINAL 3 | A | 16:45:30 | 17:30:30 |
-| Final Challenge | TIM FINAL 1 CHALLENGE | B | 16:50:30 | 17:35:30 |
-| Final Challenge | TIM FINAL 2 CHALLENGE | B | 17:36 | 18:21 |
-| Final Challenge | TIM FINAL 3 CHALLENGE | B | 18:21:30 | 19:06:30 |
+Jam yang tertulis adalah jam **Race**; Persiapan 10 menit sebelumnya di lapangan yang sama.
 
-Setiap tim: Persiapan 10 menit → Race 5 menit, sebanyak 3 kali. Semua Final Challenge di **Lapangan B**. Jadwal lengkap per tim ada di [Lampiran](#lampiran-jadwal-per-tim).
 
-### F2. Langkah setelah penyisihan selesai (saat ISHOMA 2, 15:45–16:00)
+| Tim | Race 1 | Race 2 | Race 3 |
+|---|---|---|---|
+| TIM FINAL 1 | A 16:10–16:15 | B 16:30–16:35 | A 16:55–17:00 |
+| TIM FINAL 2 | B 16:15–16:20 | A 16:40–16:45 | B 17:00–17:05 |
+| TIM FINAL 3 | A 16:25–16:30 | B 16:45–16:50 | A 17:10–17:15 |
+
+**Final Challenge** (semua di Lapangan B):
+
+| Tim | Race 1 | Race 2 | Race 3 |
+|---|---|---|---|
+| TIM FINAL 1 CHALLENGE | B 17:15–17:20 | B 17:30–17:35 | B 17:45–17:50 |
+| TIM FINAL 2 CHALLENGE | B 18:00–18:05 | B 18:15–18:20 | B 18:30–18:35 |
+| TIM FINAL 3 CHALLENGE | B 18:45–18:50 | B 19:00–19:05 | B 19:15–19:20 |
+
+Final berpindah lapangan antar-race (A ↔ B). Final Challenge seluruhnya di **Lapangan B**, sementara Lapangan A selesai pukul 17:15.
+
+### F2. Langkah setelah penyisihan selesai (saat ISHOMA 2, 15:30–16:00)
 
 1. Juri menyerahkan **urutan finalis** ke Operator, dalam bentuk: Final 1 = …, Final 2 = …, Final 3 = …, dan Challenge 1/2/3 = ….
 2. Halaman operator → bagian **Nama tim** → isi kolom:
@@ -130,8 +138,9 @@ Setiap tim: Persiapan 10 menit → Race 5 menit, sebanyak 3 kali. Semua Final Ch
 
 ### F3. Hal yang perlu diperhatikan
 
-- **Finalis 1 ikut Challenge 1**: selesai di Lapangan A pukul **16:45**, lalu Persiapan Challenge di Lapangan B pukul **16:50:30**. Hanya ada ±5 menit untuk pindah lapangan. Koordinator A langsung mengarahkan tim ke Lapangan B.
-- Kalau Final di Lapangan A molor, Challenge 1 di Lapangan B **tidak ikut mundur otomatis** (jadwal tiap lapangan berdiri sendiri). Tunggu timnya: tekan **Jeda** atau **+1 mnt** di Lapangan B sampai tim siap.
+- **Finalis pindah lapangan dengan cepat**: misalnya TIM FINAL 1 selesai Race 1 di A pukul 16:15, lalu Persiapan Race 2 di B mulai 16:20. Hanya ±5 menit untuk pindah. Koordinator A dan B saling mengabari.
+- **Finalis 1 ikut Challenge 1**: Race 3 Final di Lapangan A selesai **17:00**, Persiapan Challenge 1 di Lapangan B mulai **17:05**.
+- Kalau satu lapangan molor, lapangan lain **tidak ikut mundur otomatis** (jadwal tiap lapangan berdiri sendiri). Tunggu timnya: tekan **Jeda** atau **+1 mnt** di lapangan yang menunggu sampai tim siap.
 - Kalau finalis tidak sampai 3 tim, atau ada Challenge yang ditiadakan: gunakan **Rundown lengkap → Mulai** untuk melompati slot itu, atau minta pengelola rundown menghapus barisnya di Excel lalu jalankan `UPDATE-RUNDOWN.bat`.
 - Nama di kolom *Nama tim* juga bisa dikosongkan untuk kembali menampilkan kode (`TIM FINAL 1`, dst.).
 - Di tabel *Semua tim*, finalis yang juga ikut Challenge tampil **dua baris** (Final dan Challenge). Ini normal.
@@ -161,42 +170,42 @@ Setiap tim: Persiapan 10 menit → Race 5 menit, sebanyak 3 kali. Semua Final Ch
 
 ## Lampiran: jadwal per tim
 
-Dihitung dari rundown saat ini (sudah termasuk jeda pergantian tim 30 detik). Kalau rundown di-update, jadwal terkini selalu ada di halaman operator → **Rundown lengkap**. Jam bisa bergeser kalau Operator menunda atau menjeda.
+Jam **Race** tiap tim beserta lapangannya (A/B). Persiapan 10 menit sebelum race, di lapangan yang sama. Dihitung dari rundown saat ini; kalau rundown di-update, jadwal terkini selalu ada di halaman operator → **Rundown lengkap**. Jam bisa bergeser kalau Operator menunda atau menjeda.
 
 ### Penyisihan
 
-| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
-|---|---|---|---|---|---|---|
-| A | Bertuah Punya Budak! | 09:00 | 09:10 | 09:25 | 09:40 | 09:45 |
-| B | Arc 2 | 09:05 | 09:15 | 09:30 | 09:45 | 09:50 |
-| A | Aetherion | 09:45:30 | 09:55:30 | 10:10:30 | 10:25:30 | 10:30:30 |
-| B | Arc 1 | 09:50:30 | 10:00:30 | 10:15:30 | 10:30:30 | 10:35:30 |
-| A | Ledrek | 10:31 | 10:41 | 10:56 | 11:11 | 11:16 |
-| B | WISANGGENI | 10:36 | 10:46 | 11:01 | 11:16 | 11:21 |
-| A | Mochamad Syamsul Huda Ramdani | 12:00 | 12:10 | 12:25 | 12:40 | 12:45 |
-| B | Doa_ibu-Ibu | 12:05 | 12:15 | 12:30 | 12:45 | 12:50 |
-| A | Jrevo Unej | 12:45:30 | 12:55:30 | 13:10:30 | 13:25:30 | 13:30:30 |
-| B | Espyro | 12:50:30 | 13:00:30 | 13:15:30 | 13:30:30 | 13:35:30 |
-| A | IRIS | 13:31 | 13:41 | 13:56 | 14:11 | 14:16 |
-| B | Mizuro Um | 13:36 | 13:46 | 14:01 | 14:16 | 14:21 |
-| A | Erucokro Team | 14:16:30 | 14:26:30 | 14:41:30 | 14:56:30 | 15:01:30 |
-| B | Krakatau Taurus | 14:21:30 | 14:31:30 | 14:46:30 | 15:01:30 | 15:06:30 |
-| A | Abhinaya | 15:02 | 15:12 | 15:27 | 15:42 | 15:47 |
+| Tim | Race 1 | Race 2 | Race 3 |
+|---|---|---|---|
+| Bertuah Punya Budak! | A 09:10–09:15 | B 11:00–11:05 | A 13:40–13:45 |
+| ARC 2 | B 09:15–09:20 | A 11:10–11:15 | B 13:45–13:50 |
+| Aetherion | A 09:25–09:30 | B 11:15–11:20 | A 13:55–14:00 |
+| Arc 1 | B 09:30–09:35 | A 12:10–12:15 | B 14:00–14:05 |
+| Ledrek | A 09:40–09:45 | B 12:15–12:20 | A 14:10–14:15 |
+| WISANGGENI | B 09:45–09:50 | A 12:25–12:30 | B 14:15–14:20 |
+| Mochamad Syamsul Huda Ramdani | A 09:55–10:00 | B 12:30–12:35 | A 14:25–14:30 |
+| Doa_ibu-Ibu | B 10:00–10:05 | A 12:40–12:45 | B 14:30–14:35 |
+| Jrevo Unej | A 10:10–10:15 | B 12:45–12:50 | A 14:40–14:45 |
+| Espyro | B 10:15–10:20 | A 12:55–13:00 | B 14:45–14:50 |
+| IRIS | A 10:25–10:30 | B 13:00–13:05 | A 14:55–15:00 |
+| Mizuro Um | B 10:30–10:35 | A 13:10–13:15 | B 15:00–15:05 |
+| Erucokro Team | A 10:40–10:45 | B 13:15–13:20 | A 15:10–15:15 |
+| Krakatau Taurus | B 10:45–10:50 | A 13:25–13:30 | B 15:15–15:20 |
+| Abhinaya | A 10:55–11:00 | B 13:30–13:35 | A 15:25–15:30 |
 
 ### Final
 
-| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
-|---|---|---|---|---|---|---|
-| A | TIM FINAL 1 | 16:00 | 16:10 | 16:25 | 16:40 | 16:45 |
-| B | TIM FINAL 2 | 16:05 | 16:15 | 16:30 | 16:45 | 16:50 |
-| A | TIM FINAL 3 | 16:45:30 | 16:55:30 | 17:10:30 | 17:25:30 | 17:30:30 |
+| Tim | Race 1 | Race 2 | Race 3 |
+|---|---|---|---|
+| TIM FINAL 1 | A 16:10–16:15 | B 16:30–16:35 | A 16:55–17:00 |
+| TIM FINAL 2 | B 16:15–16:20 | A 16:40–16:45 | B 17:00–17:05 |
+| TIM FINAL 3 | A 16:25–16:30 | B 16:45–16:50 | A 17:10–17:15 |
 
 ### Final Challenge
 
-| Lap. | Tim | Persiapan 1 | Race 1 | Race 2 | Race 3 | Selesai |
-|---|---|---|---|---|---|---|
-| B | TIM FINAL 1 CHALLENGE | 16:50:30 | 17:00:30 | 17:15:30 | 17:30:30 | 17:35:30 |
-| B | TIM FINAL 2 CHALLENGE | 17:36 | 17:46 | 18:01 | 18:16 | 18:21 |
-| B | TIM FINAL 3 CHALLENGE | 18:21:30 | 18:31:30 | 18:46:30 | 19:01:30 | 19:06:30 |
+| Tim | Race 1 | Race 2 | Race 3 |
+|---|---|---|---|
+| TIM FINAL 1 CHALLENGE | B 17:15–17:20 | B 17:30–17:35 | B 17:45–17:50 |
+| TIM FINAL 2 CHALLENGE | B 18:00–18:05 | B 18:15–18:20 | B 18:30–18:35 |
+| TIM FINAL 3 CHALLENGE | B 18:45–18:50 | B 19:00–19:05 | B 19:15–19:20 |
 
-ISHOMA 1: 11:20–12:00 (Lapangan B mulai 11:21). ISHOMA 2: 15:45–16:00 (Lapangan A mulai 15:47). Mulai sedikit lebih lambat karena jeda pergantian tim; selesainya tetap sesuai Excel.
+ISHOMA 1: 11:20–12:00. ISHOMA 2: 15:30–16:00. Kedua lapangan sama, sesuai Excel.

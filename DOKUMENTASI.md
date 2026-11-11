@@ -90,7 +90,9 @@ Semua pengaturan ini tersimpan di `state.json`. Kalau laptop restart, klik `MULA
 
 ## 4. Update rundown dari Excel
 
-**Seret file Excel ke atas `UPDATE-RUNDOWN.bat`** (drag and drop). Selesai.
+**Seret file Excel ke atas `UPDATE-RUNDOWN.bat`** (drag and drop). Muncul pertanyaan nama sheet: tekan **Enter** untuk sheet `MAV`, atau ketik nama sheet lain (misalnya `Belum Fix`) lalu Enter. Selesai.
+
+Lewat terminal: `node tools\xlsx2csv.js "Rundown MAV.xlsx" --sheet="Belum Fix"`.
 
 - Kalau server sedang jalan, semua layar langsung berganti, tanpa restart.
 - Excel dicek dulu. Kalau ada yang salah, muncul pesan **GAGAL** dan jadwal lama tetap dipakai.
@@ -99,7 +101,7 @@ Semua pengaturan ini tersimpan di `state.json`. Kalau laptop restart, klik `MULA
 
 ### Format Excel yang dibaca
 
-Sheet **`MAV`**, mengikuti format rundown yang sudah ada:
+Sheet **`MAV`** (atau sheet lain yang dipilih saat update, dengan susunan kolom yang sama), mengikuti format rundown yang sudah ada:
 
 | Kolom | Lapangan A | Lapangan B |
 |---|---|---|
@@ -108,8 +110,10 @@ Sheet **`MAV`**, mengikuti format rundown yang sudah ada:
 | Keterangan | D | J |
 | Nama Tim | E | K |
 
-- Data dibaca mulai **baris 6** (jam 09:00); registrasi dan pembukaan dilewati.
+- Baris judul/header dilewati otomatis. Registrasi dan pembukaan (semua baris sebelum tim pertama) juga dilewati.
 - **Nama tim cukup ditulis di baris "Persiapan"**; baris Race di bawahnya otomatis ikut tim tersebut.
+- Tulis keterangan race beserta nomornya (**`Race 1`**, **`Race 2`**, **`Race 3`**); teks ini yang tampil di layar dan di hasil stopwatch.
+- Nama tim yang beda huruf besar/kecil (`Wisanggeni` vs `WISANGGENI`) dianggap tim yang sama; yang dipakai ejaan pertama.
 - Baris istirahat ditulis **`ISHOMA`**.
 - Keterangan yang diawali **`Race`** dihitung sebagai race (warna merah, ada bunyi GO dan buzzer).
 - Tim final ditulis `TIM FINAL 1`, dan babak challenge `TIM FINAL 1 CHALLENGE`; nama aslinya diisi lewat halaman operator.
@@ -121,9 +125,8 @@ Sheet **`MAV`**, mengikuti format rundown yang sudah ada:
 
 ### Aturan jadwal
 
-- **Jeda pergantian tim 30 detik** disisipkan otomatis setiap kali tim di lapangan berganti, sehingga kegiatan sesudahnya bisa mundur beberapa detik.
-- **ISHOMA mengikuti jam Excel.** Kalau sesi sebelumnya molor karena jeda pergantian, ISHOMA mulai sedikit lebih lambat tapi **tetap selesai sesuai jam Excel**, jadi jadwal setelah ISHOMA kembali sama persis dengan Excel.
-- Mau jadwal **100% sama dengan Excel** tanpa jeda pergantian? Ubah `"swapSeconds": 30` menjadi `"swapSeconds": 0` di `config.json`.
+- Jadwal **sama persis dengan Excel**: `"swapSeconds": 0` di `config.json` (tidak ada jeda pergantian tim).
+- Kalau rundown suatu saat butuh jeda pergantian (misalnya 30 detik), ubah menjadi `"swapSeconds": 30`. Jeda disisipkan setiap kali tim di lapangan berganti, dan layar menampilkan *"Masuk: [nama tim]"*. **ISHOMA tetap selesai sesuai jam Excel**, jadi jadwal setelah ISHOMA kembali sama dengan Excel.
 
 ---
 
@@ -170,7 +173,7 @@ Suara tidak berbunyi saat jadwal dilompati, dijeda, atau simulasi di atas 2x.
 | Layar penonton terpotong | Tekan F11 / klik dua kali untuk layar penuh. Tampilan menyesuaikan ukuran layar otomatis. |
 | PIN salah | Lihat `"operatorPin"` di `config.json`. |
 | Ingin mulai dari bersih | Tutup server, hapus `state.json`, klik `MULAI.bat`. |
-| Excel ditolak (GAGAL) | Baca pesannya: biasanya sheet bukan `MAV`, atau ada jam/kegiatan kosong. Nomor baris yang salah disebutkan. |
+| Excel ditolak (GAGAL) | Baca pesannya: biasanya nama sheet salah ketik (huruf besar/kecil dan spasi harus sama), atau ada jam/kegiatan kosong. Nomor baris yang salah disebutkan. |
 
 ---
 

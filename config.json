@@ -4,7 +4,7 @@
   "operatorPin": "2026",
   "port": 8080,
   "rundownFile": "rundown.csv",
-  "swapSeconds": 30,
+  "swapSeconds": 0,
   "lanes": [
     {
       "id": "A",

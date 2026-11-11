@@ -70,7 +70,7 @@
 <main class="lanes" id="lanes"><p class="empty">Menghubungkan ke server…</p></main>
 <section class="teams-sec">
   <div class="sec-row"><h2 class="g-head">Semua tim</h2>
-    <div class="legend"><span><i style="background:var(--prep)"></i>Persiapan</span><span><i style="background:var(--race)"></i>Race</span><span><i style="background:var(--rest)"></i>ISHOMA</span><span><i style="background:var(--swap)"></i>Pergantian tim</span></div></div>
+    <div class="legend"><span><i style="background:var(--prep)"></i>Persiapan</span><span><i style="background:var(--race)"></i>Race</span><span><i style="background:var(--rest)"></i>ISHOMA</span><span id="lg-swap" hidden><i style="background:var(--swap)"></i>Pergantian tim</span></div></div>
   <div class="teams" id="teams"></div>
 </section>
 <button id="snd" class="snd off">Klik untuk mengaktifkan suara</button>
@@ -83,6 +83,7 @@ function render() {
   document.body.classList.toggle('light', light); document.body.classList.toggle('tv', !light);
   const { W, T } = clockTimes();
   renderCommon(W, T);
+  $('lg-swap').hidden = !D.lanes.some(l => l.items.some(i => i.type === 'swap'));
   const h = D.lanes.map(l => renderLane(l, W, T, 2)).join('');
   if ($('lanes').__h !== h) { set($('lanes'), h); const shape = h.replace(/\d/g, ''); if (shape !== fit.shape) { fit.shape = shape; fit(); } } // ukur ulang hanya bila bentuk isi berubah, bukan tiap angka berganti
   set($('teams'), TEAM_LIST.map(c => renderTeam(c, T, W)).join(''));
